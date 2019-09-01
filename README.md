@@ -1,8 +1,10 @@
 # The Creative Web
 Class repo for The Creative Web, Integrated Digital Media, Tandon School of Engineering, NYU
 
-### Course details
+## Course details
 
-### Important dates
+## Important dates
 
-### Class presentations
+## Class presentations
+
+## Resources
