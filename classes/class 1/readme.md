@@ -8,6 +8,8 @@ coming soon.
 
 [Getting started with GitHub pages](https://guides.github.com/features/pages/)
 
+[Understanding Three.js materials](https://threejs.org/docs/#api/en/materials/MeshPhongMaterial)
+
 ### Assignment
 
 #### Prep
