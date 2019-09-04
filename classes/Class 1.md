@@ -5,6 +5,7 @@ coming soon.
 
 ### Resources
 [Getting started with Three.js](https://threejs.org/docs/#manual/en/introduction/Creating-a-scene)
+
 [Getting started with GitHub pages](https://guides.github.com/features/pages/)
 
 ### Assignment
