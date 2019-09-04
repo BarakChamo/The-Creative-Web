@@ -10,6 +10,8 @@ coming soon.
 
 [Understanding Three.js materials](https://threejs.org/docs/#api/en/materials/MeshPhongMaterial)
 
+[Amazing little game made with Three.js](https://tympanus.net/Tutorials/TheAviator/) and [blog post how-to](https://tympanus.net/codrops/2016/04/26/the-aviator-animating-basic-3d-scene-threejs/)
+
 ### Assignment
 
 #### Prep
