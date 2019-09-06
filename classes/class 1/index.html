@@ -31,11 +31,10 @@
 		// init the scene
 		function init(){
 			renderer = new THREE.WebGLRenderer({
-			antialias		: true,	// to get smoother output
-			preserveDrawingBuffer	: true	// to allow screenshot
+				alpha: true, antialias: true,	// to get smoother output
 			});
 
-			renderer.setClearColor( 0xBBBBBB, 1 );
+			// renderer.setClearColor( 0xBBBBBB, 1 );
 
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.getElementById('container').appendChild(renderer.domElement);
@@ -45,8 +44,12 @@
 
 			// put a camera in the scene
 			camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
-			camera.position.set(0, 0, 5);
+			camera.position.set(0, 0, 10);
 			scene.add(camera);
+
+			// cameraTwo = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
+			// cameraTwo.position.set(0, 0, 5);
+			// scene.add(cameraTwo);
 
 			// create a camera contol
 			// cameraControls	= new THREEx.DragPanControls(camera)
@@ -66,27 +69,55 @@
 
 			var light	= new THREE.DirectionalLight( Math.random() * 0xffffff );
 			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
-			scene.add( light );
+			scene.add(light);
 
 			// here you add your objects
 			// - you will most likely replace this part by your own
 			
+			var geometry, material, mesh;
+
+			material	= new THREE.MeshPhongMaterial({ambient: 0x808080, color: Math.random() * 0xffffff});
+			
+			// Sphere
+			geometry = new THREE.SphereGeometry( 1, 16, 16 );
+			mesh	= new THREE.Mesh( geometry, material );
+			mesh.position.set(2, 2, 2);
+
+			// Add mesh to the scene
+			scene.add( mesh );
+
+			// Cube
+			geometry = new THREE.CubeGeometry( 1, 2, 2 );
+			// material	= new THREE.MeshPhongMaterial({ambient: 0x808080, color: Math.random() * 0xffffff});
+			material = new THREE.MeshNormalMaterial();
+			mesh	= new THREE.Mesh( geometry, material );
+			mesh.position.set(-2, -2, -2);
+
+			// Add mesh to the scene
+			scene.add( mesh );
+
+			// Torus
+			geometry = new THREE.TorusGeometry( 1, 0.5 );
+			material	= new THREE.MeshPhongMaterial({ambient: 0x808080, color: Math.random() * 0xffffff});
+			mesh	= new THREE.Mesh( geometry, material );
+			mesh.position.set(0, 0, 0);
+
+			// Add mesh to the scene
+			scene.add( mesh );
+
 			// Create geometry
-			var geometry	= new THREE.TorusGeometry( 1, 0.42 );
+			// var geometry	= new THREE.TorusGeometry( 1, 0.5 );
 			// var geometry	= new THREE.CubeGeometry( 2, 2, 2 );
 
 			// Create material
 			// var material	= new THREE.MeshNormalMaterial();
-			var material	= new THREE.MeshPhongMaterial({ambient: 0x808080, color: Math.random() * 0xffffff});
 			// var material	= new THREE.MeshToonMaterial({ambient: 0x808080, color: Math.random() * 0xffffff});
 
-			// material.flatShading = true;
+			material.flatShading = true;
 
 			// Create mesh by assigning a material to a geometry
-			var mesh	= new THREE.Mesh( geometry, material );
 
-			// Add mesh to the scene
-			scene.add( mesh );
+
 		}
 
 		// animation loop
@@ -100,7 +131,7 @@
 		// render the scene
 		function render() {
 			// variable which is increase by Math.PI every seconds - usefull for animation
-			var deltaTime	= Date.now() * Math.PI;
+			var time	= Date.now() * Math.PI;
 
 			// update camera controls
 			cameraControls.update();
@@ -108,14 +139,14 @@
 			// actually render the scene
 			renderer.render( scene, camera );
 
-			// update camera controls
-			cameraControls.update();
+			// // update camera controls
+			// cameraControls.update();
 
 			// animation of all objects
 			scene.traverse(function(object3d, i){
 				if( object3d instanceof THREE.Mesh === false )	return
-				object3d.rotation.y = deltaTime*0.0003 * (i % 2 ? 1 : -1);
-				object3d.rotation.x = deltaTime*0.0002 * (i % 2 ? 1 : -1);
+				object3d.rotation.y = time * 0.0003 * (i % 2 ? 1 : -1);
+				object3d.rotation.x = time * 0.0002 * (i % 2 ? 1 : -1);
 			})
 		}
 	</script>
