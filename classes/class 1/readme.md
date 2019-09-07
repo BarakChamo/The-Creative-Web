@@ -22,7 +22,7 @@ To review the materials of the class refer to the main `index.html` in this fold
 
 ### Examples
 1. [Procedural generation and animation (trefoil knot)](https://barakchamo.github.io/The-Creative-Web/classes/class%201/examples/trefoil_knot.html) - [source](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%201/examples/trefoil_knot.html)
-2. [Multi-camera scenes and scene helpers](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%201/examples/multi_camera_helpers.html) - [](source)
+2. [Multi-camera scenes and scene helpers](https://barakchamo.github.io/The-Creative-Web/classes/class%201/examples/multi_camera_helpers.html) - [source](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%201/examples/multi_camera_helpers.html)
 
 ### Slides
 coming soon.
