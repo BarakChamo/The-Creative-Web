@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Procedular geometry - Trefoil Knot</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+			
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/three-trackballcontrols-web@0.0.2/dist/three-trackballcontrols.js"></script>
+
+		<style>
+		body {
+			overflow	: hidden;
+			padding		: 0;
+			margin		: 0;
+
+			color		: #222;
+			background: linear-gradient(to bottom,  #EEE 0%,#CCC 100%);
+			font-family	: arial;
+			font-size	: 100%;
+		}
+		#info .top {
+			position	: absolute;
+			top		: 0px;
+			width		: 100%;
+			padding		: 5px;
+			text-align	: center;
+		}
+		#info a {
+			color		: #66F;
+			text-decoration	: none;
+		}
+		#info a:hover {
+			text-decoration	: underline;
+		}
+		#info .bottom {
+			position	: absolute;
+			bottom		: 0px;
+			right		: 5px;
+			padding		: 5px;
+		}
+		</style>
+
+	</head>
+<body>
+	<!-- three.js container -->
+    	<div id="container"></div>
+	<!-- info on screen display -->
+
+	<script type="text/javascript">
+		var stats, scene, renderer;
+		var camera, cameraControl;
+
+		// Trefoil knot variables
+		const numberOfMeshes = 50;
+
+		// Bootstrap the animation
+		init();
+		animate();
+
+		// init the scene
+		function init(){
+			renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+			renderer.setSize( window.innerWidth, window.innerHeight );
+
+			// Append the renderer's <canvas> element to the screen
+			document.getElementById('container').appendChild(renderer.domElement);
+
+			// Resize canvas when the screen resizes
+			document.addEventListener('resize', function() {
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+				renderer.setSize(width, height);
+			}, false);
+
+			// create the root scene
+			scene = new THREE.Scene();
+
+			// put a camera in the scene
+			camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
+			camera.position.set(0, 0, 10);
+			scene.add(camera);
+
+			// Hook up camera trackball controls
+			cameraControls	= new TrackballControls(camera);
+
+			// Add lights to the scene
+			var light	= new THREE.AmbientLight( Math.random() * 0xffffff );
+			scene.add( light );
+
+			// Add random directional light at random position
+			var light	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			scene.add( light );
+
+			// Add another random light
+			var light	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			scene.add(light);
+
+
+			/* Procedural geometry */ 
+			
+			var geometry, material, mesh;
+			
+			// Create a cube gemetry
+			geometry = new THREE.CubeGeometry( 0.25, 0.25, 0.25 );
+			
+			material	= new THREE.MeshPhongMaterial({color: Math.random() * 0xffffff});
+			material.flatShading = true;
+			mesh	= new THREE.Mesh( geometry, material );
+			// Iteratively create meshes from the same geometry
+			for (let i = 0; i < numberOfMeshes; i++) {
+				// Create a new material for every mesh so we can color them separately
+				
+				// Calculate initial position along trefoil knot 
+				// Use a fractional position of all meshes between 0 and 1
+				const pos = trefoilKnot(i / numberOfMeshes); // this returns a vector3, look at the trefoilKnot( definition)
+				mesh.position.copy(pos); // we use .copy() instead of .set() because we're using a position vector
+
+				// Store some index parameter (don't overwrite `id`)
+				// We'll use n to animate the meshes in order in the animation loop
+				mesh.n = i;
+
+				// Add mesh to the scene
+				scene.add(mesh);
+			}
+		}
+
+		// https://en.wikipedia.org/wiki/Trefoil_knot
+		function trefoilKnot(f) {
+			const p = f * Math.PI * 2
+
+			// trefoil coeficients
+			const x = Math.cos(p) + 2 * Math.sin(2 * p);
+			const y = Math.cos(p) - 2 * Math.cos(2 * p);
+			const z = -Math.sin(3 * p);
+
+			return new THREE.Vector3(x, y, z); // A vector3 is a geometrical construct that represents a 3D direction vector of (x,y,z)
+		}
+
+		// animation loop
+		function animate() {
+			// Call the function again when the browser is free 
+			requestAnimationFrame( animate );
+
+			// do the render
+			render();
+		}
+
+		// render the scene
+		function render() {
+			// variable which is increase by Math.PI every seconds - usefull for animation
+			var time	= Date.now() * Math.PI;
+
+			// update camera controls
+			cameraControls.update();
+
+			// actually render the scene
+			renderer.render( scene, camera );
+
+			// // update camera controls
+			// cameraControls.update();
+
+			// iterate over all objects in a scene
+			scene.traverse(function(object3d, i){
+				// Check if the current object is a THREE.Mesh (rather than a light, camera, etc.)
+				if( object3d instanceof THREE.Mesh === false )	return
+
+				// Calculate the new position of the current and next points along the knot
+				// Offset by current time to animate along the path
+				const t = Date.now() / 20000;
+				const nCurrent = (t + object3d.n / numberOfMeshes) % 1; // extract the fractional position along a path with a mod
+				const nNext = (t + (object3d.n + 1) / numberOfMeshes) % 1; // extract the fractional position of the next object
+
+				// Set the current position and color by current progress (using HSL color scale)
+				object3d.position.copy(trefoilKnot(nCurrent));
+				object3d.material.color.setHSL(nCurrent, 0.33, 0.66);
+
+				// use .LookAt() to rotate the current object to look at the position of the next
+				// This will rotate all objects along the path of the knot
+				object3d.lookAt(trefoilKnot(nNext));
+			})
+		}
+	</script>
+</body>
+</html>
