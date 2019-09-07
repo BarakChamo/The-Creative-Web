@@ -1,5 +1,13 @@
 ## The Creative Web - Class 1
 
+In this class we took a first stab at Three.js and web-based 3D graphics. We leare
+
+### Examples
+1. Procedural generation and animation (trefoil knot)
+2. Multi-camera scenes and scene helpers
+3. Viewing panoramic images
+4. Playing video
+
 ### Slides
 coming soon.
 
@@ -13,6 +21,7 @@ coming soon.
 [Amazing little game made with Three.js](https://tympanus.net/Tutorials/TheAviator/) and [blog post how-to](https://tympanus.net/codrops/2016/04/26/the-aviator-animating-basic-3d-scene-threejs/)
 
 ### Assignment
+
 
 #### Prep
 1. Signup for GitHub
