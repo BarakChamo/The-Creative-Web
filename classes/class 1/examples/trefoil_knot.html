@@ -104,15 +104,17 @@
 			
 			var geometry, material, mesh;
 			
-			// Create a cube gemetry
+			// Create a cube gemetry (notice we'll be sharing the geometry between all meshes)
 			geometry = new THREE.CubeGeometry( 0.25, 0.25, 0.25 );
 			
-			material	= new THREE.MeshPhongMaterial({color: Math.random() * 0xffffff});
-			material.flatShading = true;
-			mesh	= new THREE.Mesh( geometry, material );
 			// Iteratively create meshes from the same geometry
 			for (let i = 0; i < numberOfMeshes; i++) {
+				// Create a new mesh
+				mesh	= new THREE.Mesh( geometry, material );
+
 				// Create a new material for every mesh so we can color them separately
+				material	= new THREE.MeshPhongMaterial({color: Math.random() * 0xffffff});
+				material.flatShading = true;
 				
 				// Calculate initial position along trefoil knot 
 				// Use a fractional position of all meshes between 0 and 1
