@@ -17,7 +17,7 @@
 
 			color		: #222;
 			background: linear-gradient(to bottom,  #EEE 0%,#CCC 100%);
-			font-family	: arial;
+			font-family	: monospace;
 			font-size	: 100%;
 		}
 		#info .top {
@@ -45,13 +45,18 @@
 	</head>
 <body>
 	<!-- three.js container -->
-    	<div id="container"></div>
+			<div id="container"></div>
+			<div id="info">
+				<p class="top">Press 1 and 2 on the keyboard to switch cameras.
+						<br>The scene helpers are only visible through camera 1.</p>
+			</div>
 	<!-- info on screen display -->
 
 	<script type="text/javascript">
 		var stats, scene, renderer;
 		var camera, cameraControl;
 		var viewCamera, editCamera;
+		var helpers;
 		var cameraTarget = new THREE.Vector3(0,0,0);
 
 		// Trefoil knot variables
@@ -156,40 +161,29 @@
 			// Create a helper layer, this will let us group helpers and 
 			// hide / show them all at once
 
+			helpers = new THREE.Object3D();
+			scene.add(helpers);
+
 			// Notice that all helpers are assigned a layer `1`
 			// This will later be used to turn all helpers on and off
 			
 			// Create a grid helper to visualize the ground plane
 			helper = new THREE.GridHelper( 5, 20 );
-			helper.layers.set(1);
-			scene.add(helper);
+			helpers.add(helper);
 
 			// Create an axes helper of size 2
 			helper = new THREE.AxesHelper( 2 );
-			helper.layers.set(1);
-			scene.add(helper);
+			helpers.add(helper);
 
 			// Create a camera helper for the view camera
 			helper = new THREE.CameraHelper( viewCamera );
-			helper.layers.set(1);
-			scene.add(helper);
+			helpers.add(helper);
 
 			helper = new THREE.DirectionalLightHelper( light2, 0.5 );
-			helper.layers.set(1);
-			scene.add(helper);
+			helpers.add(helper);
 
 			helper = new THREE.DirectionalLightHelper( light3, 0.5 );
-			helper.layers.set(1);
-			scene.add(helper);
-
-
-			/* Layer management */ 
-			// Set the layer containing all helpers (layer 1) as 
-			// active in the editCamera
-			// inactive in the viewCamera
-
-			editCamera.layers.enable(1);
-			viewCamera.layers.disable(1);
+			helpers.add(helper);
 		}
 
 		// animation loop
@@ -235,11 +229,13 @@
 		// Listen for keypresses and change active camera and helper layers
 		document.onkeypress = function(e) {
 			if(e.keyCode === 49) {
-				camera = editCamera
+				camera = editCamera;
+				helpers.visible = true;
 			}
 
 			if(e.keyCode === 50) {
-				camera = viewCamera
+				camera = viewCamera;
+				helpers.visible = false;
 			}
 		}
 	</script>
