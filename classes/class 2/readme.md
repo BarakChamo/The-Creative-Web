@@ -5,6 +5,8 @@ We learned what makes a 3D `scene`, namely a `camera`, some `lights` and a `mesh
 We can already start making some interesting 3D compositions, varying them over time in the `animate()`
 function and modifying parameters such as `position` and `rotation` on a mesh, or `color` on a `material`.
 
+Let's start by reviewing Week 1's new examples, [available here](https://github.com/BarakChamo/The-Creative-Web/tree/master/classes/class%201/examples).
+
 Now that we have a fundamental understanding of Three's API, we can start thinking of interesting ways to combine it with other
 tools, libraries and techniques we know to make interesting interactive projects:
 - [Magic Words - A web-based VR experience using Google Poly, Speech recognition and WebVR](https://barakchamo.com/experiments#/magic-words/)
