@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Introduction to Three.js - Viewing Panoramas</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+			
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/three-trackballcontrols-web@0.0.2/dist/three-trackballcontrols.js"></script>
+
+		<style>
+			body {
+				overflow	: hidden;
+				padding		: 0;
+				margin		: 0;
+
+				color		: #222;
+				background: linear-gradient(to bottom,  #EEE 0%,#CCC 100%);
+				font-family	: monospace;
+				font-size	: 100%;
+			}
+			#info .top {
+				position	: absolute;
+				top		: 0px;
+				width		: 100%;
+				padding		: 5px;
+				text-align	: center;
+			}
+			#info a {
+				color		: #66F;
+				text-decoration	: none;
+			}
+			#info a:hover {
+				text-decoration	: underline;
+			}
+			#info .bottom {
+				position	: absolute;
+				bottom		: 0px;
+				right		: 5px;
+				padding		: 5px;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+		<div id="info">
+			Equirectangular panorama demo.<br />
+            Drag an equirectangular texture into the page.
+        </div>
+
+        <script type="text/javascript">
+			var camera, scene, renderer, material;
+
+			var isUserInteracting = false,
+				onMouseDownMouseX = 0, onMouseDownMouseY = 0,
+				lon = 0, onMouseDownLon = 0,
+				lat = 0, onMouseDownLat = 0,
+				phi = 0, theta = 0;
+
+
+            //  Initialize and begin updating the scene
+			init();
+			animate();
+
+			function init() {
+				var container, mesh;
+
+                /* Create a WebGL renderer and append it's canvas to the DOM */ 
+                renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+                container = document.getElementById( 'container' );
+				container.appendChild( renderer.domElement );
+
+                /* Create a perspective camera and point it at 0,0,0 */
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 11000 );
+				camera.target = new THREE.Vector3( 0, 0, 0 );
+
+                /* Create the root scene */ 
+				scene = new THREE.Scene();
+
+                // Create a sphere buffer
+                // Buffer geometries are more efficient to render but tend to be harder to manipulate
+                // As a rule of thumb, if you're deforming or interacting with a mesh, you should use a geometry
+                // If all you want is to render a simple shape, use a buffer geometry
+                var geometry = new THREE.SphereBufferGeometry( 500, 60, 40 );
+                
+                // invert the geometry on the x-axis so that all of the faces point inward
+                // This allows us to project the panoramic image on the sphere and view it from the inside
+                // We'll make this sphere huge so we can put stuff inside
+                geometry.scale( - 20, 20, 20 );
+
+                // Load an initial equirectangular texture
+                // Textures are image data loaded into memory and associated with a material
+                // We can use textures to do anything from render realistic details, to decals and skyboxes (like this one)
+				var texture = new THREE.TextureLoader().load( 'https://live.staticflickr.com/4152/5063990424_6560387abf_b.jpg' );
+				material = new THREE.MeshBasicMaterial( { map: texture } );
+
+                // Combine the material and the geometry into a mesh
+				mesh = new THREE.Mesh( geometry, material );
+
+                // Add the mesh to the scene
+                scene.add( mesh );
+                
+                /* Try adding more geometry to the scene here! */ 
+                    // - create a geometry and material
+                    // - combine into a mesh
+                    // - add to the scene
+
+            }
+            
+            // Begin animation loop
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+			}
+
+			function render() {
+                // If there's no interaction update camera rotation
+                if ( isUserInteracting === false )
+                    lon += 0.1;
+
+                // Calculate new position from the new longitude
+				lat = Math.max( - 85, Math.min( 85, lat ) );
+				phi = THREE.Math.degToRad( 90 - lat );
+				theta = THREE.Math.degToRad( lon );
+
+                // Update camera target position on a sphere
+				camera.target.x = 500 * Math.sin( phi ) * Math.cos( theta );
+				camera.target.y = 500 * Math.cos( phi );
+				camera.target.z = 500 * Math.sin( phi ) * Math.sin( theta );
+
+                // Tell camera to look at the new target
+				camera.lookAt( camera.target );
+
+                // Render the scene
+				renderer.render( scene, camera );
+            }
+            
+
+            /* Event handlers */
+
+            // Update camera projection on screen resize
+            window.addEventListener( 'resize', function () {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			});
+
+
+            document.addEventListener( 'dragover', function ( event ) {    
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'copy';
+            }, false );
+
+            // Provide visual feedback,using opacity, on drag enter
+            document.addEventListener( 'dragenter', function () {
+                document.body.style.opacity = 0.5;
+            }, false );
+
+            // Reset the body's opacity on drag leave
+            document.addEventListener( 'dragleave', function () {
+                document.body.style.opacity = 1;
+            }, false );
+
+            // Listen for file drop events
+            document.addEventListener( 'drop', function ( event ) {
+                event.preventDefault();
+
+                // Create a new file reader to load the iamge
+                var reader = new FileReader();
+                reader.addEventListener( 'load', function ( event ) {
+                    // Assign the new image as the material's texture
+                    // and mark the material for update
+                    material.map.image.src = event.target.result;
+                    material.map.needsUpdate = true;
+                }, false );
+            
+            // Read the image loaded into memory
+            reader.readAsDataURL( event.dataTransfer.files[ 0 ] );
+
+            // Reset the body's opacity
+            document.body.style.opacity = 1;
+
+            }, false );
+
+            // On mouse down, update temporary variables storing camera position
+            // This will let us update the camera target in relation to mouse movement
+            document.addEventListener( 'mousedown', function ( event ) {
+                isUserInteracting = true;
+                
+				var clientX = event.clientX || event.touches[ 0 ].clientX;
+				var clientY = event.clientY || event.touches[ 0 ].clientY;
+                
+				onMouseDownMouseX = clientX;
+				onMouseDownMouseY = clientY;
+                
+				onMouseDownLon = lon;
+				onMouseDownLat = lat;
+			});
+            
+            // Update camera parameters
+            document.addEventListener( 'mousemove', function ( event ) {
+                if ( isUserInteracting === true ) {
+                    var clientX = event.clientX || event.touches[ 0 ].clientX;
+					var clientY = event.clientY || event.touches[ 0 ].clientY;
+                    
+					lon = ( onMouseDownMouseX - clientX ) * 0.1 + onMouseDownLon;
+					lat = ( clientY - onMouseDownMouseY ) * 0.1 + onMouseDownLat;
+				}
+			});
+            
+            // Done with interaction, can keep rotation camera
+            document.addEventListener( 'mouseup', function () {
+				isUserInteracting = false;
+            });
+            
+			document.addEventListener( 'wheel', function ( event ) {
+                var fov = camera.fov + event.deltaY * 0.05;
+                camera.fov = THREE.Math.clamp( fov, 10, 75 );
+                camera.updateProjectionMatrix();
+            });
+
+		</script>
+	</body>
+</html>

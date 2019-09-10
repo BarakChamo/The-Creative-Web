@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Introduction to Three.js</title>
+		<title>Introduction to Three.js - Raycasting</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		
@@ -46,17 +46,17 @@
 	<!-- three.js container -->
 			<div id="container"></div>
 			<div id="info">
-				<p class="top">Press 1 and 2 on the keyboard to switch cameras.
-						<br>The scene helpers are only visible through camera 1.</p>
+				<p class="top">Click on a cube to interact with it.</p>
 			</div>
 	<!-- info on screen display -->
 
 	<script type="text/javascript">
 		var stats, scene, renderer;
-		var camera, cameraControl;
-		var viewCamera, editCamera;
-		var helpers;
-		var cameraTarget = new THREE.Vector3(0,0,0);
+        var camera, shouldRaycast;
+
+        var cameraTarget = new THREE.Vector3(0,0,0);
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
 
 		// Trefoil knot variables
 		const numberOfMeshes = 50;
@@ -85,27 +85,13 @@
 			// create the root scene
 			scene = new THREE.Scene();
 
-			/* Cameras */ 
-
-			// Create an empty position for the camera to look at
-			// We don't even have to add it to the scene, it's just a space marker
+			/* Camera */ 
 
 			// create the view camera
-			viewCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20 );
-			viewCamera.position.set(0, 4, 3); // Position the camera above and away from the scene
-			viewCamera.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
-			scene.add(viewCamera);
-
-			// Create the edit camera
-			editCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000 );
-			editCamera.position.set(7, 7, 7); // Position the camera above and away from the scene
-			scene.add(editCamera);
-
-			// Hook up camera trackball controls to editCamera
-			cameraControls	= new TrackballControls(editCamera);
-
-			// Assign edit camera as the initial camera to be used
-			camera = editCamera;
+			camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20 );
+			camera.position.set(0, 4, 3); // Position the camera above and away from the scene
+			camera.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add(camera);
 
 			/* Lights */
 
@@ -130,16 +116,16 @@
 			
 			var geometry, material, mesh, randomPoint;
 			var numCubes = 5;
-			var cubes = [];
+            var cubes = [];
 
 			for (let i = 0; i < numCubes; i++) {
 				// Create a cube gemetry
-				geometry = new THREE.CubeGeometry( 0.5, 0.5, 0.5 );
+				geometry = new THREE.SphereGeometry( 0.5, 0.5, 0.5 );
 					
 				// Create a new material for every mesh so we can color them separately
-				material	= new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
-				// material.flatShading = true;
-				
+				material = new THREE.MeshPhongMaterial({color: Math.random() * 0xffffff});
+                material.flatShading = true;
+
 				pointX = Math.sin(2 * Math.PI * (i / numCubes));
 				pointZ = Math.cos(2 * Math.PI * (i / numCubes));
 
@@ -152,37 +138,6 @@
 				scene.add(mesh);
 				cubes.push(mesh);
 			}
-
-
-			/* Helpers */ 
-			var helper;
-
-			// Create a helper layer, this will let us group helpers and 
-			// hide / show them all at once
-
-			helpers = new THREE.Object3D();
-			scene.add(helpers);
-
-			// Notice that all helpers are assigned a layer `1`
-			// This will later be used to turn all helpers on and off
-			
-			// Create a grid helper to visualize the ground plane
-			helper = new THREE.GridHelper( 5, 20 );
-			helpers.add(helper);
-
-			// Create an axes helper of size 2
-			helper = new THREE.AxesHelper( 2 );
-			helpers.add(helper);
-
-			// Create a camera helper for the view camera
-			helper = new THREE.CameraHelper( viewCamera );
-			helpers.add(helper);
-
-			helper = new THREE.DirectionalLightHelper( light2, 0.5 );
-			helpers.add(helper);
-
-			helper = new THREE.DirectionalLightHelper( light3, 0.5 );
-			helpers.add(helper);
 		}
 
 		// animation loop
@@ -196,47 +151,76 @@
 
 		// render the scene
 		function render() {
+            /* Raycasting */
+            
+            var hits = []
+            if(shouldRaycast) { // check if mouse is pressed
+                // Perform a ray cast from the camera, in the direction of the mouse in 3d space
+                raycaster.setFromCamera(mouse, camera);
+    
+                // Extract intersected objects (from a particular scene or parent Object3D)
+                var intersections = raycaster.intersectObjects(scene.children);
+
+                // Log all intersections
+                // console.log(intersections)
+
+                // Map intersected meshes to the hits array
+                hits = intersections.map(intersection => intersection.object)
+            }
+
+
 			// variable which is increase by Math.PI every seconds - usefull for animation
 			var time = Date.now() * Math.PI;
-
-			// update camera controls
-			cameraControls.update();
 
 			// actually render the scene
 			renderer.render( scene, camera );
 
 			// Rotate view camera around scene
-			var x = viewCamera.position.x;
-			var z = viewCamera.position.z;
-			viewCamera.position.x = x * Math.cos(0.01) + z * Math.sin(0.01);
-			viewCamera.position.z = z * Math.cos(0.01) - x * Math.sin(0.01);
+			var x = camera.position.x;
+            var z = camera.position.z;
+
+			camera.position.x = x * Math.cos(0.01) + z * Math.sin(0.01);
+			camera.position.z = z * Math.cos(0.01) - x * Math.sin(0.01);
 
 			// re-Rotate the camerea to look at the cameraTarget at the center of the scene
-			viewCamera.lookAt(cameraTarget);
+			camera.lookAt(cameraTarget);
 
 			// iterate over all objects in a scene
 			scene.traverse(function(object3d, i){
 				// Check if the current object is a THREE.Mesh (rather than a light, camera, etc.)
 				if( object3d instanceof THREE.Mesh === false )	return
 
+                // Rotate object based on `n` coefficient
 				object3d.rotateY(0.01 * object3d.n);
 				object3d.rotateX(0.02 * object3d.n);
-				object3d.rotateZ(0.03 * object3d.n);
-			})
-		}
+                object3d.rotateZ(0.03 * object3d.n);
+                
+                /* Try animating transitions here! */ 
 
-		// Listen for keypresses and change active camera and helper layers
-		document.onkeypress = function(e) {
-			if(e.keyCode === 49) {
-				camera = editCamera;
-				helpers.visible = true;
-			}
+                // Check if current mesh is hit by the raycast
+                if(hits.includes(object3d))
+                    object3d.scale.set(1.2,1.2,1.2)
+                else 
+                    object3d.scale.set(1,1,1)
+            })
+        }
+        
+        window.addEventListener('mousemove', function (event) {
+            // calculate mouse position in normalized device coordinates
+            // (-1 to +1) for both components
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        })
 
-			if(e.keyCode === 50) {
-				camera = viewCamera;
-				helpers.visible = false;
-			}
-		}
+        window.addEventListener('mousedown', function (event) {
+            shouldRaycast = true;
+        })
+
+        window.addEventListener('mouseup', function (event) {
+            shouldRaycast = false;
+        })
+
+
 	</script>
 </body>
 </html>
