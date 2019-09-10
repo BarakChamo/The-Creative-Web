@@ -56,8 +56,12 @@ coming soon.
 ### Resources
 
 #### Using images and video
+- [VideoTexture explained](https://threejs.org/docs/#api/en/textures/VideoTexture)
+- [Using the ImageLoader](https://threejs.org/docs/#api/en/loaders/ImageLoader)
 
 #### Raycasting and mouse interaction
+- [Raycasting explained](https://threejs.org/docs/#api/en/core/Raycaster)
+- [Interactive raycasting example](https://threejs.org/examples/?q=raycast#webgl_interactive_raycasting_points)
 
 ### Assignment
 For next class, expand upon your assignment from week 1:
