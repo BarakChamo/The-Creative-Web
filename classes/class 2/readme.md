@@ -14,6 +14,8 @@ tools, libraries and techniques we know to make interesting interactive projects
 - [Audio reactive particles using Three.js and Tone.js](https://avseoul.net/particleEqualizer/)
 - [Optical flow particles audio visualization with Web Audio and Web cam](https://epok.tech/work/tendrils/)
 - [UFO sightings globe (using data in Three.js)](http://mayaontheinter.net/ufo/)
+- [Within, a VR home](https://vr.with.in/)
+- [Going Home, an interactive 3D film](http://goinghome.302chanwoo.com/)
 
 The more we expand our toolset, and the more we learn how to bend these APIs and libraries to our will, the more creative
 we can get in connecting the dots in new and interesting ways.
