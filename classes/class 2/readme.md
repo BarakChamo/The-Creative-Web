@@ -57,6 +57,9 @@ The source code for the example is [here](https://github.com/BarakChamo/The-Crea
 ### Slides
 coming soon.
 
+### Readings
+- [Elements of Interaction Design](https://www.interaction-design.org/literature/article/what-is-interaction-design)
+
 ### Resources
 
 #### Using images and video
