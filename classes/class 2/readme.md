@@ -48,6 +48,8 @@ information about all the objects the ray hit on its way.
 Let's see a simple example to understand how raycasting works: [raycasting example](https://BarakChamo.github.io/The-Creative-Web/classes/class%202/examples/raycasting.html)
 The source code for the example is [here](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%202/examples/raycasting.html)
 
+[Here's an official Three.js example of painting in 3D using raycasting](https://threejs.org/examples/#webgl_interactive_voxelpainter)
+
 ### Examples
 1. [Raycasting (mouse interaction)](https://BarakChamo.github.io/The-Creative-Web/classes/class%202/examples/raycasting.html) - [source](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%202/examples/raycasting.html)
 2. [Panorama viewer](https://barakchamo.github.io/The-Creative-Web/classes/class%202/examples/panorama-viewer.html) - [source](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%202/examples/panorama-viewer.html)
