@@ -62,6 +62,9 @@ coming soon.
 
 ### Resources
 
+#### JavaScript stuff
+- [Understanding JavaScript events](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events)
+
 #### Using images and video
 - [VideoTexture explained](https://threejs.org/docs/#api/en/textures/VideoTexture)
 - [Using the ImageLoader](https://threejs.org/docs/#api/en/loaders/ImageLoader)
