@@ -65,6 +65,7 @@ coming soon.
 #### JavaScript stuff
 - [Understanding JavaScript events](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events)
 - [getUserMedia, or how to get webcam video streaming in the browser](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia)
+- [Drag & Drop interaction in the browser](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API)
 
 #### Using images and video
 - [VideoTexture explained](https://threejs.org/docs/#api/en/textures/VideoTexture)
