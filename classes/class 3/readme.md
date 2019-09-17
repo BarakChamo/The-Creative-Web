@@ -114,8 +114,15 @@ Build a space for a 3D narrative. This could be a narrative over time or over sp
 of multiple perspective / elements. Think of how your users will navigate the space, interact with content and how to 
 progress through a narrative in a 3D environment (what is the VR equivalent of scrolling or hiting next?)
 
+Some ideas:
+- Use images and videos in 3D to build a visual narrative
+- Build transitions using interactive element to progress a story
+- Explore multiple perspectives using multiple cameras
+
 #### Assignment resources
 - [examples for interaction of the Three.js documentation](https://threejs.org/examples/?q=interact)
 - [Rendering scenes, remember you can use multiple cameras and build multiple scenes](https://threejs.org/docs/#manual/en/introduction/Creating-a-scene)
 - [VR in Three.js - interaction examples at the end of the page](https://threejs.org/docs/#manual/en/introduction/How-to-create-VR-content)
+- [Example showing dragging objects in 3D space](https://threejs.org/examples/?q=interacti#webgl_interactive_draggablecubes)
 - [Orbit controls and using keyboard keys to move around](https://threejs.org/docs/#examples/en/controls/OrbitControls)
+- [Loading 3D models](https://threejs.org/docs/#manual/en/introduction/Loading-3D-models)
