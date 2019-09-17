@@ -60,6 +60,12 @@ A few short readings this week
 
 ### Resources
 
+#### VR Project examples
+- [The Machine to be Another](https://vimeo.com/89556173)
+- [The Displaced - NYT](https://docubase.mit.edu/project/the-displaced/) and [video](https://www.youtube.com/watch?v=ecavbpCuvkI&t=128s)
+- [Sortie en Mer](https://www.youtube.com/watch?v=Jv8nVOYBUSs)
+- [Within VR](https://vr.with.in/)
+
 #### Raycasting and mouse interaction
 - [Raycasting explained](https://threejs.org/docs/#api/en/core/Raycaster)
 - [Interactive raycasting example](https://threejs.org/examples/?q=raycast#webgl_interactive_raycasting_points)
