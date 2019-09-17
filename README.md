@@ -10,6 +10,7 @@ Class repo for The Creative Web, Integrated Digital Media, Tandon School of Engi
 ## Class pages
 - [Class 1](https://github.com/BarakChamo/The-Creative-Web/tree/master/classes/class%201)
 - [Class 2](https://github.com/BarakChamo/The-Creative-Web/tree/master/classes/class%202)
+- [Class 3](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%203)
 
 ## Help topics
 - [How to use terminal](https://github.com/BarakChamo/The-Creative-Web/blob/master/help/Using%20Git.md)
