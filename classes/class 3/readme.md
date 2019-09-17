@@ -43,9 +43,28 @@ raycasting method, but the interaction ray is aimed from the controller rather t
 3. On mobile VR, the display also acts as a controller, allowing interaction at the direction of our gaze (with the small circle in the middle of the screen).
 
 With these simple changes, we can now turn any of our Three.js scenes into a portable, interactive VR experience!
+But, to get WebVR working in our browser, we need to deal with a little bit of setup:
+
+##### Enabling WebVR on Chrome (and the WebVR simulator)
+
+**Enable WebVR flags in Chrome**
+1. On both your desktop and mobile, navigate to `chrome://flags`.
+2. In the search bar, search for `WebVR`.
+3. Enable the flag and restart your browser.
+
+**Simulate WebVR on a desktop**
+1. Install the Chrome WebVR emulator [available here](https://chrome.google.com/webstore/detail/webvr-api-emulation/gbdnpaebafagioggnhkacnaaahpiefil?hl=en).
+2. WebVR is not supported on local files, so you must server it from a local server or your GitHub pages. (instructions follow)
+
+**Serve WebVR apps to your phone**
+1. WebVR is not supported on local files, so you must server it from a local server or your GitHub pages. (instructions follow)
+2. Option 1: upload your project files to a server, such as GitHub pages, and navigate to that page on your phone.
+2. Option 2: install `http-server` from `npm` globally using the command `npm install -g http-server` and start a local server in the project folder using `http-server`, more on that [here](https://www.npmjs.com/package/http-server).
+
 
 ### Examples
 1. [Raycasting (mouse interaction)](https://BarakChamo.github.io/The-Creative-Web/classes/class%202/examples/raycasting.html) - [source](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%202/examples/raycasting.html)
+2. [Interaction examples on Three.js](https://threejs.org/examples/?q=interactive)
 
 ### Slides
 coming soon.
@@ -69,6 +88,7 @@ A few short readings this week
 #### Raycasting and mouse interaction
 - [Raycasting explained](https://threejs.org/docs/#api/en/core/Raycaster)
 - [Interactive raycasting example](https://threejs.org/examples/?q=raycast#webgl_interactive_raycasting_points)
+- [Interaction examples on Three.js](https://threejs.org/examples/?q=interactive)
 
 #### WebVR and portable virtual reality
 - [How to use WebVR with Three.js](https://threejs.org/docs/#manual/en/introduction/How-to-create-VR-content)
