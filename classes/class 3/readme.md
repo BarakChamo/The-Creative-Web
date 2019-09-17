@@ -8,7 +8,7 @@ Using raycasting we can:
 - Read data stored on these objects (using any arbitrary property and format. i.e. `mesh.myData = 123`).
 - Manipulate the scene by transforming, enabling and even adding objects to our scene. [See this voxel painting example](https://threejs.org/examples/webgl_interactive_voxelpainter.html).
 
-#### Raycasting, continued
+### Raycasting, continued
 Raycasting refers to a technique used to answer a simple question:
 Where in 3D space, is a point on the screen (2D space) intersecting?
 
@@ -23,16 +23,16 @@ The source code for the example is [here](https://github.com/BarakChamo/The-Crea
 
 [Again, here's an official Three.js example of painting in 3D using raycasting](https://threejs.org/examples/#webgl_interactive_voxelpainter)
 
-#### WebVR, going into 3D
+### WebVR, going into 3D
 Even with raycasting, that allows us to interact with objects in 3D, we are still viewing the scene in 2D, through a flat render from the camera on the screen.
 Using [WebVR](https://webvr.info/), a browser-based interface for portable virtual reality, we can turn the browser into a head-mounted display, and experience the web in 3D.
 
-##### What exactly is WebVR?
+### What exactly is WebVR?
 WebVR is a set of browser APIs that allow browser users to experience virtual reality content right on their devices. It supports features
 such as stereo-rendering (split eye views), device orientation (for moving and looking around), VR interaction and even support for Vive and Oculus
 headsets on compatible setups, so you could run your Three.js sketches on a full-on VR rig.
 
-##### How do WebVR and Three.js work together?
+### How do WebVR and Three.js work together?
 WebVR is enabled on Three.js using an extension to the WebGL renderer (that we create using `new THREE.WebGLRenderer()`).
 Using WebVR, basically, means the headset replaces the camera in our scene and allows us to look around the scene in a stereo render (two eyes see slightly different angles).
 Technically, the following areas are affected:
@@ -45,7 +45,7 @@ raycasting method, but the interaction ray is aimed from the controller rather t
 With these simple changes, we can now turn any of our Three.js scenes into a portable, interactive VR experience!
 But, to get WebVR working in our browser, we need to deal with a little bit of setup:
 
-##### Enabling WebVR on Chrome (and the WebVR simulator)
+### Enabling WebVR on Chrome (and the WebVR simulator)
 
 **Enable WebVR flags in Chrome**
 1. On both your desktop and mobile, navigate to `chrome://flags`.
