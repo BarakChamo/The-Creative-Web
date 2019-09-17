@@ -142,7 +142,7 @@
 			// VR UPDATE 4 - Move the objects away from the center of the scene
 			// Mobile VR cameras are always at position (0,0,0)
 			cubesContainer = new THREE.Object3D();
-			cubesContainer.position.set(0, 0, -2);
+			cubesContainer.position.set(0, 0, -2.5);
 			cubesContainer.rotation.set(Math.PI / 2, 0, 0);
 			scene.add(cubesContainer);
 
@@ -170,20 +170,17 @@
 
 		// animation loop
 		function animate() {
-			// Call the function again when the browser is free 
-			requestAnimationFrame( animate );
-
-			// do the render
-			render();
+			// VR UPDATE 5 - user the renderer's animation loop
+			// This is optional in desktop web but required for VR 
+			renderer.setAnimationLoop(render);
 		}
-
 		// render the scene
 		function render() {
             /* Raycasting */
             
             var hits = []
 
-			// VR UPDATE 5 - Raycasting in the direction of the gaze from the center of the screen (0, 0)
+			// VR UPDATE 6 - Raycasting in the direction of the gaze from the center of the screen (0, 0)
 			// Perform a ray cast from the camera, in the direction of the headset in 3d space
 			raycaster.setFromCamera({ x: 0, y: 0 }, camera);
     
