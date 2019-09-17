@@ -103,5 +103,19 @@ A few short readings this week
 
 ### Assignment
 For next week, choose one of the following, and complete in Three.js with or without WebVR:
-1. Create a new form of interaction or interface that is designed for 3D spaces and immersive web experiences.
-2. ...
+
+1. #### Immersive interfaces
+Design and implement a new form of interaction or interface that is tailored for 3D interactions and immersive web experiences.
+Your design should take into consideration the modalities of 3D space (and immersive web such as VR and AR) the affordances of
+3D graphics and space and consider UX as well as UI given an additional dimension.
+
+2. #### Immersive stories
+Build a space for a 3D narrative. This could be a narrative over time or over space, a directed story or open exploration
+of multiple perspective / elements. Think of how your users will navigate the space, interact with content and how to 
+progress through a narrative in a 3D environment (what is the VR equivalent of scrolling or hiting next?)
+
+#### Assignment resources
+- [examples for interaction of the Three.js documentation](https://threejs.org/examples/?q=interact)
+- [Rendering scenes, remember you can use multiple cameras and build multiple scenes](https://threejs.org/docs/#manual/en/introduction/Creating-a-scene)
+- [VR in Three.js - interaction examples at the end of the page](https://threejs.org/docs/#manual/en/introduction/How-to-create-VR-content)
+- [Orbit controls and using keyboard keys to move around](https://threejs.org/docs/#examples/en/controls/OrbitControls)
