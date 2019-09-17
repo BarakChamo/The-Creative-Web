@@ -46,9 +46,11 @@ With these simple changes, we can now turn any of our Three.js scenes into a por
 But, to get WebVR working in our browser, we need to deal with a little bit of setup:
 
 ### Enabling WebVR on Chrome (and the WebVR simulator)
+We'll be working in Chrome on both mobile and desktop (using the WebVR) emulator.
+Please follow these steps to enable WebVR on your browsers:
 
 **Enable WebVR flags in Chrome**
-1. On both your desktop and mobile, navigate to `chrome://flags`.
+1. On both your desktop and mobile, navigate to [`chrome://flags`](chrome://flags).
 2. In the search bar, search for `WebVR`.
 3. Enable the flag and restart your browser.
 
