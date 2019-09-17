@@ -99,6 +99,7 @@ A few short readings this week
 - [How to use WebVR with Three.js](https://threejs.org/docs/#manual/en/introduction/How-to-create-VR-content)
 - [Introduction to WebVR](https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_on_the_web/WebVR)
 - [Google Daydream Elements, interactive introduction to VR design principles](https://play.google.com/store/apps/details?id=com.google.vr.unity.ddelements&hl=en)
+- [Using the DayDream controller with WebBluetooth and Three.js](https://mrdoob.github.io/daydream-controller.js/)
 
 ### Assignment
 For next week, choose one of the following, and complete in Three.js with or without WebVR:
