@@ -96,4 +96,6 @@ A few short readings this week
 - [Google Daydream Elements, interactive introduction to VR design principles](https://play.google.com/store/apps/details?id=com.google.vr.unity.ddelements&hl=en)
 
 ### Assignment
-To be completed
+For next week, choose one of the following, and complete in Three.js with or without WebVR:
+1. Create a new form of interaction or interface that is designed for 3D spaces and immersive web experiences.
+2. ...
