@@ -20,12 +20,14 @@
 				font-family	: monospace;
 				font-size	: 100%;
 			}
-			#info .top {
+			#info.top {
 				position	: absolute;
 				top		: 0px;
 				width		: 100%;
 				padding		: 5px;
 				text-align	: center;
+                color       : white;
+                background  : rgba(0,0,0,0.5); 
 			}
 			#info a {
 				color		: #66F;
@@ -45,7 +47,7 @@
 	<body>
 
 		<div id="container"></div>
-		<div id="info">
+		<div id="info" class="top">
 			Equirectangular panorama demo.<br />
             Drag an equirectangular texture into the page.
         </div>
@@ -91,7 +93,7 @@
                 // invert the geometry on the x-axis so that all of the faces point inward
                 // This allows us to project the panoramic image on the sphere and view it from the inside
                 // We'll make this sphere huge so we can put stuff inside
-                geometry.scale( - 20, 20, 20 );
+                geometry.scale( -20, 20, 20 );
 
                 // Load an initial equirectangular texture
                 // Textures are image data loaded into memory and associated with a material
@@ -101,15 +103,62 @@
 
                 // Combine the material and the geometry into a mesh
 				mesh = new THREE.Mesh( geometry, material );
+				mesh._skybox = true;
 
                 // Add the mesh to the scene
                 scene.add( mesh );
-                
-                /* Try adding more geometry to the scene here! */ 
-                    // - create a geometry and material
-                    // - combine into a mesh
-                    // - add to the scene
 
+
+			/* Lights */
+
+			// Add lights to the scene
+			var light	= new THREE.AmbientLight( Math.random() * 0xffffff );
+			scene.add( light );
+
+			// Add random directional light at random position
+			var light	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			scene.add( light );
+
+			// Add another random light
+			var light	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+			light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+			scene.add(light);
+
+			/* Geometry */ 
+			
+			var geometry, material, mesh, randomPoint;
+			var numCubes = 5;
+			var cubes = [];
+
+			// for (let i = 0; i < numCubes; i++) {
+			// 	// Create a cube gemetry
+			// 	geometry = new THREE.CubeGeometry( 0.5, 0.5, 0.5 );
+					
+			// 	// Create a new material for every mesh so we can color them separately
+			// 	material	= new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff, side: THREE.DoubleSide});
+			// 	// material.flatShading = true;
+				
+			// 	pointX = Math.sin(2 * Math.PI * (i / numCubes));
+			// 	pointZ = Math.cos(2 * Math.PI * (i / numCubes));
+
+			// 	mesh	= new THREE.Mesh( geometry, material );
+
+			// 	mesh.position.set(pointX, 0.5, pointZ);
+			// 	mesh.rotation.set(0.5, 0.5, 0.5);
+			// 	mesh.n = Math.random();
+
+			// 	// Add mesh to the scene
+			// 	scene.add(mesh);
+			// 	cubes.push(mesh);
+			// }
+
+			geometry = new THREE.CubeGeometry( 0.5, 0.5, 0.5 );
+			material = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(1, 0.5, 1);
+			scene.add(mesh);
+              
             }
             
             // Begin animation loop
@@ -138,6 +187,18 @@
 
                 // Render the scene
 				renderer.render( scene, camera );
+
+				// iterate over all objects in a scene
+				scene.traverse(function(object3d, i){
+					// Check if the current object is a THREE.Mesh (rather than a light, camera, etc.)
+					if( object3d instanceof THREE.Mesh === false )	return
+
+					if(object3d._skybox) return
+
+					object3d.rotateY(0.01 * object3d.n);
+					object3d.rotateX(0.02 * object3d.n);
+					object3d.rotateZ(0.03 * object3d.n);
+				})
             }
             
 
@@ -150,7 +211,6 @@
 
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			});
-
 
             document.addEventListener( 'dragover', function ( event ) {    
                 event.preventDefault();
