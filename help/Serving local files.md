@@ -1,5 +1,5 @@
 
-## How to serve our projects o
+## How to serve our projects online
 
 When building simple projects it's always possible to just open our `index.html` files in the browser
 while we are working locally. Sometimes though, specific browser features and requirements, such as
