@@ -57,11 +57,14 @@ Please follow these steps to enable WebVR on your browsers:
 **Simulate WebVR on a desktop**
 1. Install the Chrome WebVR emulator [available here](https://chrome.google.com/webstore/detail/webvr-api-emulation/gbdnpaebafagioggnhkacnaaahpiefil?hl=en).
 2. WebVR is not supported on local files, so you must server it from a local server or your GitHub pages. (instructions follow)
+3. Open a WebVR project in your desktop browser.
+4. Open `Chrome Developer Tools` by pressing `Ctrl + Shift + I`
+5. Navigate to the `WebVR` tab in the dev tools window, it'll allow you to simulate headset movement and rotation and basic interactions.
 
 **Serve WebVR apps to your phone**
 1. WebVR is not supported on local files, so you must server it from a local server or your GitHub pages. (instructions follow)
 2. Option 1: upload your project files to a server, such as GitHub pages, and navigate to that page on your phone.
-2. Option 2: install `http-server` from `npm` globally using the command `npm install -g http-server` and start a local server in the project folder using `http-server`, more on that [here](https://www.npmjs.com/package/http-server).
+2. Option 2: install `http-server` from `npm` globally using the command `npm install -g http-server` and start a local server in the project folder using `http-server`, more on that [in the help section](https://www.npmjs.com/package/http-server).
 
 
 ### Examples
