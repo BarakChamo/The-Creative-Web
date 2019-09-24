@@ -166,7 +166,7 @@
                 var intersections = raycaster.intersectObjects(scene.children);
 
                 // Log all intersections
-                // console.log(intersections)
+                console.log(intersections)
 
                 // Map intersected meshes to the hits array
                 hits = intersections.map(intersection => intersection.object)
@@ -202,10 +202,16 @@
                 /* Try animating transitions here! */ 
 
                 // Check if current mesh is hit by the raycast
-                if(hits.includes(object3d))
-                    object3d.scale.set(1.2,1.2,1.2)
-                else 
-                    object3d.scale.set(1,1,1)
+                if(hits.includes(object3d)) {
+					var scale = Math.min(object3d.scale.x * 1.025, 1.45)
+					// called when a mesh is intersected
+                    object3d.scale.set(scale, scale, scale)
+				}
+                else {
+					// Called when a mesh is not intersected
+					var scale = Math.max(object3d.scale.x * 0.975, 1)					
+					object3d.scale.set(scale, scale ,scale)
+				}
             })
         }
         
