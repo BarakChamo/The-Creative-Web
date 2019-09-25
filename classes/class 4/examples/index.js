@@ -57,13 +57,6 @@ function init() {
     // // Initialize new ray input
     rayInput = new RayInput.default(camera, renderer.domElement);
     rayInput.setSize(renderer.getSize());
-
-    // Register a callback whenever an object is acted on.
-    rayInput.on('raydown', (opt_mesh) => {
-        shouldInteract = true
-        // Called when an object was activated. If there is a selected object,
-        // opt_mesh is that object.
-    });
     
     // Register a callback when an object is selected.
     rayInput.on('rayover', (mesh) => {
@@ -131,24 +124,9 @@ function init() {
         rayInput.add(mesh);
     }
 
-
-    /* VR Controllers */
-    controller = renderer.vr.getController( 0 );
-    controller.addEventListener( 'selectstart', onPressOn );
-    controller.addEventListener( 'selectend', onPressOff );
-    scene.add( controller );
-
-    console.log(controller)
-    controller = renderer.vr.getController( 1 );
-    controller.addEventListener( 'selectstart', onPressOn );
-    controller.addEventListener( 'selectend', onPressOff );
-    scene.add( controller );
-    console.log(controller)
-
-
     // Notice we are using pointer events instead of mouse or touch
-    renderer.domElement.addEventListener('pointerdown', onPressOn)
-    renderer.domElement.addEventListener('pointerup', onPressOff)
+    renderer.domElement.addEventListener('pointerdown', () => {shouldInteract = true})
+    renderer.domElement.addEventListener('pointerup', () => {shouldInteract = false})
 }
 
 // animation loop
@@ -164,17 +142,15 @@ function render() {
     // update the inputRay
     rayInput.update();
 
-    // var hits = []
-
     // VR UPDATE 6 - Raycasting in the direction of the gaze from the center of the screen (0, 0)
     // Perform a ray cast from the camera, in the direction of the headset in 3d space
-    // raycaster.setFromCamera({ x: 0, y: 0 }, camera);
+    raycaster.setFromCamera({ x: 0, y: 0 }, camera);
 
     // Extract intersected objects (from a particular scene or parent Object3D)
-    // var intersections = raycaster.intersectObjects(cubesContainer.children);
+    var intersections = raycaster.intersectObjects(cubesContainer.children);
 
     // Map intersected meshes to the hits array
-    // hits = intersections.map(intersection => intersection.object)
+    hits = intersections.map(intersection => intersection.object)
 
     // actually render the scene
     renderer.render( scene, camera );
@@ -201,7 +177,7 @@ function render() {
         let newScale;
         
         // Check if the current traveresed object is intersected
-        if(hit = object3d) {
+        if(hits.includes(object3d)) {
             newScale = Math.min(1.25, scale + 0.025);
             
             if(shouldInteract)
@@ -213,14 +189,3 @@ function render() {
         object3d.scale.set(newScale, newScale, newScale)
     })
 }
-
-function onPressOn() {
-    shouldInteract = true;
-}
-
-function onPressOff() {
-    shouldInteract = false;
-}
-
-
-
