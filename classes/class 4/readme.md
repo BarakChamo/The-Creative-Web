@@ -1,16 +1,11 @@
-## The Creative Web - Class 3
+## The Creative Web - Class 4
 
 This week we'll practice what we've learned over the past few classes, from basic rendering of 3D scenes using Three.js
 to using images, interaction, and VR.
 
 
-
 ### Readings (for next class)
-A few short readings this week
-- [Is VR the Ultimate Empathy Machine?](https://www.wired.com/brandlab/2015/11/is-virtual-reality-the-ultimate-empathy-machine/)
-- [Gestalt principles](https://www.interaction-design.org/literature/topics/gestalt-principles)
-- [Interaction Design in Virtual Reality](https://www.interaction-design.org/literature/topics/virtual-reality)
-- [Elements of Interaction Design](https://www.interaction-design.org/literature/article/what-is-interaction-design)
+`To be completed`
 
 #### WebVR Template
 To begin working on WebVR projects you can refer to the attached WebVR template here.
@@ -33,6 +28,7 @@ You're welcome to copy the folder for use in any of your future WebVR projects, 
 - [Raycasting explained](https://threejs.org/docs/#api/en/core/Raycaster)
 - [Interactive raycasting example](https://threejs.org/examples/?q=raycast#webgl_interactive_raycasting_points)
 - [Interaction examples on Three.js](https://threejs.org/examples/?q=interactive)
+- [Ray Input for WebVR and WebXR](https://github.com/borismus/ray-input)
 
 #### WebVR and portable virtual reality
 - [How to use WebVR with Three.js](https://threejs.org/docs/#manual/en/introduction/How-to-create-VR-content)
