@@ -5,7 +5,12 @@ to using images, interaction, and VR.
 
 
 ### Readings (for next class)
-`To be completed`
+- [How generative music works](http://teropa.info/loop/#/title)
+- [Listen to Terry Riley's in C](https://www.youtube.com/watch?v=yNi0bukYRnA) read about it [here](https://en.wikipedia.org/wiki/In_C)
+- [Music of Change - John Cage](https://www.youtube.com/watch?v=B_8-B2rNw7s)
+- [Ableton's Learning Music](https://learningmusic.ableton.com/)
+- [Ableton's Learning Synths](https://learningsynths.ableton.com/)
+- [Sonic interaction design](https://en.wikipedia.org/wiki/Sonic_interaction_design)
 
 #### WebVR Template
 To begin working on WebVR projects you can refer to the attached WebVR template here.
