@@ -7,6 +7,9 @@ own with synthesizers, visualizing sound and sonifying visual scenes and interac
 This week, we'll focus on getting sound out - playing back samples and using synthesizers.
 Next week we'll explore audio analysis, visualization and sonification.
 
+Before we dive into the details, please review [Ableton's Learning Synths](https://learningsynths.ableton.com/get-started)
+for a general introduction to how digital sound and synthesizers work.
+
 ### The WebAudio API
 The WebAudio API is a powerful sound engine that is embedded in the browser
 and exposed as a collection of nodes, generators and modulators, that create
@@ -68,7 +71,46 @@ In this example, play a `C4` for an eighth-note, or `8n`:
 
 More on the `Synth` [here](https://tonejs.github.io/docs/13.8.25/Synth).
 
+We can play multiple notes at the same time, like playing a chord, by passing an array of notes to a `PolySynth`:
+```javascript
+	// Define a polyphonic synth of a type and a voice count
+	var polySynth = new Tone.PolySynth(4, Tone.Synth).toMaster()
+	
+	// play multiple notes by passing an array of notes
+	synth.triggerAttackRelease(['C3', `E3`, `G3`], '8n')
+```
+
+More on the `PolySynth` [here](https://tonejs.github.io/docs/13.8.25/PolySynth).
+
 [Here's a working example of a synth playing a C3.](https://jsfiddle.net/barakchamo/67098xyr/19/)
+
+
+#### Playing sounds
+
+To play simple audio clips, use the `Player`:
+```
+var player = new Tone.Player("./sound.mp3", function(){
+	//the player is now ready	
+}).toMaster();
+```
+
+To play sampled audio clips like a musical instrument, we can use the `Sampler`, with advanced
+control over playback speed, pitch and envelope just like the synth.
+
+Using a sampler you can pass multiple sounds and map them to musical notes:
+```javascript
+var sampler = new Tone.Sampler({
+	"C3" : "path/to/C3.mp3",
+	"D#3" : "path/to/Dsharp3.mp3",
+	"F#3" : "path/to/Fsharp3.mp3",
+	"A3" : "path/to/A3.mp3",
+}, function(){
+	//the sampler is now ready
+	sampler.triggerAttack("D3")
+})
+```
+
+[ere's an example of a step sequencer made with samplers](https://tonejs.github.io/examples/stepSequencer.html)
 
 
 #### Playing notes over time
@@ -116,6 +158,28 @@ More on the `Loop` [here](https://tonejs.github.io/docs/13.8.25/Loop).
 
 For more complex musical sequences and data scturctures, see the `Part` [here](https://tonejs.github.io/docs/13.8.25/Part) and Sequence [here](https://tonejs.github.io/docs/13.8.25/Sequence).
 
+
+#### Effects and processing chains
+We can connect our synth to a range of effects before connecting it to the master output.
+Tone provides many different kinds of built-in effects such as `Reverb`, `Tremolo`, `Phaser` and `Distortion`.
+
+To connect any source to an effect, insest the effect between the input and the output in the chain.
+We do this with the `.chain` method that exists on every `source` and `processor` nodes: 
+```javascript
+// Create a new synth
+var synth = new Tone.PolySynth(4, Tone.Synth)
+
+// Create a new reverb effect
+var effect = new Reverb()
+
+// Chain the synth and the effect before connecting to the output
+synth.chain(effect, Tone.Master)
+```
+
+Note that we can chain many different effects and an output with a single call to `node.chain()`
+
+[Here's an example on chaining effects](https://jsfiddle.net/barakchamo/nwcyk973/8/).
+
 ### Resources
 
 #### Sound in marketing, interface and scores
@@ -130,5 +194,6 @@ For more complex musical sequences and data scturctures, see the `Part` [here](h
 
 #### WebAudio and Tone.js
 - [Tone.js Documentation](https://tonejs.github.io/)
+- [Tone.js Examples](https://tonejs.github.io/examples/)
 
 ### Assignment
