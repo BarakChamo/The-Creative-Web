@@ -44,6 +44,30 @@ with simple controls to start creating sounds, compositions and sound interactio
 
 
 #### Setting up Tone.js
+We begin by creating a new source (a Tone.js Synth wraps a WebAudio Oscillator and time-based envelope) and connecting it to the master output, this is equivalent to turning your synth on, and connecting it to your speakers.
+```javascript
+// Define a new Tone.js Synth
+let synth = new Tone.Synth()
+
+// Connect the synth to the master output
+synth = synth.toMaster()
+```
+
+We can also do this as a short one-liner
+```javascript
+// Create a synth and connect it to the master output
+var synth = new Tone.Synth().toMaster()
+```
+
+#### Playing notes
+Next, we'll trigger the synth with a specific musical note, for a duration of musical intervals.
+In this example, play a `C4` for an eighth-note, or `8n`:
+```javascript
+	synth.triggerAttackRelease('C3', 'n')
+```
+
+[Here's a working example of a synth playing a C3.](https://jsfiddle.net/barakchamo/67098xyr/19/)
+
 
 
 ### Resources
