@@ -59,5 +59,6 @@ with simple controls to start creating sounds, compositions and sound interactio
 - [Ableton's Learning Music](https://learningmusic.ableton.com/index.html)
 
 #### WebAudio and Tone.js
-- 
+- [Tone.js Documentation](https://tonejs.github.io/)
+
 ### Assignment
