@@ -63,12 +63,58 @@ var synth = new Tone.Synth().toMaster()
 Next, we'll trigger the synth with a specific musical note, for a duration of musical intervals.
 In this example, play a `C4` for an eighth-note, or `8n`:
 ```javascript
-	synth.triggerAttackRelease('C3', 'n')
+	synth.triggerAttackRelease('C3', '8n')
 ```
+
+More on the `Synth` [here](https://tonejs.github.io/docs/13.8.25/Synth).
 
 [Here's a working example of a synth playing a C3.](https://jsfiddle.net/barakchamo/67098xyr/19/)
 
 
+#### Playing notes over time
+We can define small musical phrases and create sequences on notes using the Tone.js Transport (timing controls) and scheduler.
+You can think of the scheduler as a context-aware musical `setTimeout`, a way to schedule function calls in the future that
+is tied to the progression of your Tone.js code.
+(BTW, this can be used for triggering synths but also for any other code to run)
+
+```javascript
+// define a callback function
+function play() {
+	synth.triggerAttackRelease('C3', '8n')
+}
+
+// Set the tempo of our transport (so we can define timing in musical terms)
+Tone.Transport.bpm.value = 120
+
+//set the transport to repeat every one measure
+Tone.Transport.loopEnd = '1m'
+Tone.Transport.loop = true
+
+// Schedule an event
+Tone.Transport.schedule(triggerSynth, 0)
+```
+
+More on the `Transport` [here](https://tonejs.github.io/docs/13.8.25/Transport).
+
+[Here's a working example of a basic loop using the transport.](https://jsfiddle.net/barakchamo/2nLo0zb1/3/)
+
+The `Transport` is the global timing control for your audio context, and if set to a timing or loop will
+affect global time. `Loop` is an alternative for localized sequences that can be turned on and off and combined
+with interaction-based triggers, as well as other loops.
+
+```javascript
+// Define a loop, providing a callback and call intervals
+var loop = new Tone.Loop(function(time){
+	synth.triggerAttackRelease("C1", "8n", time)
+}, "4n")
+
+// Start the loop and schedule it to stop in 2 measures
+loop.start(0).stop('2m')
+```
+
+More on the `Loop` [here](https://tonejs.github.io/docs/13.8.25/Loop).
+
+For more complex musical sequences and data scturctures, see the `Part` [here](https://tonejs.github.io/docs/13.8.25/Part) and Sequence [here](https://tonejs.github.io/docs/13.8.25/Sequence).
 
 ### Resources
 
