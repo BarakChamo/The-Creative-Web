@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+</head>
+<body>
+    <tone-demo>
+        <tone-button label="Chord" id="chord"></tone-button>
+    </tone-demo>
+
+    <script>
+        var distortion = new Tone.Distortion(0.6)
+        var tremolo = new Tone.Tremolo().start()
+
+        var polySynth = new Tone.PolySynth(4, Tone.Synth).chain(distortion, tremolo, Tone.Master)
+
+        document.querySelector('#chord').addEventListener('mousedown', () => { 
+            polySynth.triggerAttack(['C4', 'E4', 'G4', 'B4']) 
+        })
+
+        document.querySelector('#chord').addEventListener('mouseup', () => { 
+            polySynth.triggerRelease(['C4', 'E4', 'G4', 'B4']) 
+        })
+    </script>
+</body>
+</html>
