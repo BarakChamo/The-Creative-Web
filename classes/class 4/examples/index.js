@@ -127,6 +127,8 @@ function init() {
     // Notice we are using pointer events instead of mouse or touch
     renderer.domElement.addEventListener('pointerdown', () => {shouldInteract = true})
     renderer.domElement.addEventListener('pointerup', () => {shouldInteract = false})
+    document.addEventListener('selectstart', () => {shouldInteract = true})
+    document.addEventListener('selectend', () => {shouldInteract = false})
 }
 
 // animation loop
