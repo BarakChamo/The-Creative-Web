@@ -33,7 +33,7 @@ are composed, such as the Major, Minor and Pentatonic scales, each with their ow
 [Check out the Notes and Scales section of Ableton's Learning Music to learn more.](https://learningmusic.ableton.com/notes-and-scales/notes-and-scales.html)
 
 Let's work with notes Tone.js:
-- [Playing notes]()
+- [Playing notes](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/notes.html)
 
 Notes group together in [scales](https://en.wikipedia.org/wiki/Scale_(music)), subsets of the chromatic scale that maintain
 harmonic consistency and often have distinct musical and emotional chracteristics, such as being percieved as uplifting (Major)
@@ -41,8 +41,8 @@ or melancholic (Minor).
   
 [Explore scales on Ableton's Learning Music](https://learningmusic.ableton.com/notes-and-scales/keys-and-scales.html)
 
-Let's work with scales Tone.js:
-- [Playing scales]()
+Let's work with chords Tone.js:
+- [Playing chords](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/polyphony.html)
 
 
 #### Time in music (and Tone.js)
@@ -53,8 +53,8 @@ individual note played, typically described in parts of a bar or beat, (`1/8`, `
 
 In this example, notice the combination of a master BPM slider that controls the overall speed of playback, and the set duration of each of the notes.
 
-- [Let's see how to work with time and duration in Tone.js]()
-
+- [Loops in Tone.js](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/loops.html)
+- [Let's see how to work with time and duration in Tone.js](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/parts.html)
 
 ### Understanding Synthesis
 
@@ -79,6 +79,7 @@ An envelope is typically denoted in `ADSR`:
 `S (sustain)` - The continuous phase of a note, like when a key is being held down.
 `R (release)` - The diminishing phase after a note has been released.
 
+Here's an example of using envelopes on [Ableton's Learning Synths]
 
 ### The Audio Processing Chain
 
