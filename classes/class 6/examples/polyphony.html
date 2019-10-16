@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+</head>
+<body>
+        <tone-demo autoplay>
+            <tone-trigger></tone-trigger>
+        </tone-demo>
+        <script>
+        var synth = new Tone.PolySynth(6, Tone.Synth, {
+        oscillator : {
+                type : "square"
+            }
+        }).toMaster();
+        
+        //play a chord
+        synth.triggerAttackRelease(["C4", "E4", "A4"], "4n");
+
+		document.querySelector("tone-trigger").addEventListener("change", e => {
+			if (e.detail){
+                synth.triggerAttack(["C4", "E4", "A4"]);
+			} else {
+                synth.triggerRelease(["C4", "E4", "A4"]);
+			}
+		});
+    </script>
+</body>
+</html>
