@@ -1,4 +1,3 @@
-#### Chords and Scales (or, pitches together)
 ## The Creative Web - Class 6
 
 ### The Elements of Music
