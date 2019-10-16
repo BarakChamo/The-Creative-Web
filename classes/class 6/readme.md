@@ -1,5 +1,5 @@
 #### Chords and Scales (or, pitches together)
-## The Creative Web - Class 5
+## The Creative Web - Class 6
 
 ### The Elements of Music
 Music can be described in many ways and analyzed from perspectives ranging
