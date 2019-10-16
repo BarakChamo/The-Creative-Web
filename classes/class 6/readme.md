@@ -3,7 +3,7 @@
 
 ### The Elements of Music
 Music can be described in many ways and analyzed from perspectives ranging
-from caltural influences to mathematical relationships, all of which open up a world of musical exploration.
+from cultural influences to mathematical relationships, all of which open up a world of musical exploration.
 
 For the purposes of our short introduction to music and sound on the web, I think we can benefit from a simpler definition:
 `Music is organized sound`, coined by *Edgard Varèse*.
@@ -11,29 +11,62 @@ For the purposes of our short introduction to music and sound on the web, I thin
 Thinking of music in terms of organization and structure gives us a framework for both analysis and construction, and understanding the relationships between the different elements mean we can start thinking of algorithmic approaches for incorporating sound and music in our work.
 
 So, what are the elements of music? Let's begin with a subset:
-- Pitch
-- Duration and form
-- Timbe
+- Pitch - How dominantly high or low a sound is percieved, as well as discrete audio frequencies.
+- Duration and form - The lengths or sounds and relationship between them (and silence) over time.
+- Timbre - The tonal quality and characteristics of each sound.
 
 These elements come together in more complex forms to create the language and terms we use to describe music:
-- Notes
-- Chords
-- Progressions
-- Texture
+- Notes - can represent a pitch over a duration of musical time. 
+- Rhythm - A repeated pattern of sounds.
+- Scales - Groups of notes with particular melodic and harmonic characteristics.
+- Chords - Notes of a scale played in a group.
+- Progressions - Notes of a scale played over time.
+- Texture - The tonal layering of multiple instruments of varying timbres.
+
+It's clear that from very simple building blocks: A sound at a particular `pitch`, with a particular `timbre` over a specified `duration`, the whole of music can emerge.
 
 #### Pitches, Notes and Frequencies
+In Western music, the fundamental division of frequencies and pitches into discrete notes in the [Chromatic Scale](https://en.wikipedia.org/wiki/Chromatic_scale), this scale represents every white and black, out of which all subscales
+are composed, such as the Major, Minor and Pentatonic scales, each with their own distinct characteristics.
 
-#### Chords and Scales (or, pitches relationships)
+[Here's an example of continuous pitch with synths on Ableton's Learning Synths.](https://learningsynths.ableton.com/making-changes/pitch)
+[Check out the Notes and Scales section of Ableton's Learning Music to learn more.](https://learningmusic.ableton.com/notes-and-scales/notes-and-scales.html)
+
+Let's work with notes Tone.js:
+- [Playing notes]()
+
+Notes group together in [scales](https://en.wikipedia.org/wiki/Scale_(music)), subsets of the chromatic scale that maintain
+harmonic consistency and often have distinct musical and emotional chracteristics, such as being percieved as uplifting (Major)
+or melancholic (Minor).
+  
+[Explore scales on Ableton's Learning Music](https://learningmusic.ableton.com/notes-and-scales/keys-and-scales.html)
+
+Let's work with scales Tone.js:
+- [Playing scales]()
+
 
 #### Time in music (and Tone.js)
+Time in music is defined by a combination of a master tempo, often describes in BPM (beats-pet-minute) and the duration of each
+individual note played, typically described in parts of a bar or beat, (`1/8`, `1/4`, `1/2`, `1/1`).
+
+[Here's an example of working with time and duration in music on Ableton's Learning Music](https://learningmusic.ableton.com/make-melodies/love-will-tear-us-apart.html)
+
+In this example, notice the combination of a master BPM slider that controls the overall speed of playback, and the set duration of each of the notes.
+
+- [Let's see how to work with time and duration in Tone.js]()
+
 
 ### Understanding Synthesis
 
 #### Timbre and Waveforms
 
-#### Envelopes
+As we've seen before, all discernible sounds are, physically, repeated wave forms. If the amplitude controls the level of a sound (volume) and the frequency the pitch, the shape of a wave defines it's tonal quality.
 
-#### Modulation
+A key element of working with digital sound, beyond time and pitch, is the timbre, tonality, or character of the notes we're playing.
+Modern synthesizers provide incredible control over the "sound" and "character" of a synth.
+
+
+#### Envelopes
 
 ### The Audio Processing Chain
 
