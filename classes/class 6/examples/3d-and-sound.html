@@ -78,12 +78,25 @@
 		const noteSynth = new Tone.Synth().toMaster()
 
         //create a loop
-        const loop = new Tone.Loop(function(time){
-            drumSynth.triggerAttackRelease("C1", "8n", time)
+		const loop = new Tone.Loop(function(time){
+			// Play drum synth
+			drumSynth.triggerAttackRelease("C1", "8n", time)
+			
+			// Change color of Three.js spheres
+			scene.traverse(function(object3d, i) {
+				// Check if the current object is a THREE.Mesh (rather than a light, camera, etc.)
+				if( object3d instanceof THREE.Mesh === false )	return
+
+				// Assign new random color to each mesh in the scene
+				object3d.material.color = new THREE.Color(Math.random() * 0xffffff)
+			})
+
         }, "4n")
 
-		//play the loop between 0-2m on the transport
+		// Start the loop
 		loop.start(0)
+
+		// Start the Tone.js transport (like hitting play)
 		Tone.Transport.start()
 
 		// Bootstrap the animation
@@ -149,7 +162,7 @@
 					
 				// Create a new material for every mesh so we can color them separately
 				material = new THREE.MeshPhongMaterial({color: Math.random() * 0xffffff});
-                material.flatShading = true;
+				material.flatShading = true;
 
 				pointX = Math.sin(2 * Math.PI * (i / numCubes));
 				pointZ = Math.cos(2 * Math.PI * (i / numCubes));
@@ -158,6 +171,8 @@
 				mesh.position.set(pointX, 0.5, pointZ);
 				mesh.rotation.set(0.5, 0.5, 0.5);
 				mesh.n = Math.random();
+
+				// assign a musical note to every sphere
 				mesh.note = notes[i];
 
 				// Add mesh to the scene
