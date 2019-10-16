@@ -15,19 +15,19 @@
             <tone-keyboard octaves="2" polyphonic="true"></tone-keyboard>
         </tone-demo>
     <script>
-        const synth = new Tone.Synth().toMaster()
+        // const synth = new Tone.Synth().toMaster()
 
         let synth 
         synth = new Tone.Synth().toMaster()
-        // synth = new Tone.DuoSynth().toMaster()
-        // synth = new Tone.MonoSynth().toMaster()
+        synth = new Tone.DuoSynth().toMaster()
+        synth = new Tone.MonoSynth().toMaster()
         // synth = new Tone.MetalSynth().toMaster()
-        // synth = new Tone.MembraneSynth().toMaster()
+        synth = new Tone.MembraneSynth().toMaster()
 
         //attach a listener to the keyboard events
         document.querySelector('tone-keyboard').addEventListener('noteon', e => {
-            note.textContent = e.detail.name
-            freq.textContent = Tone.Frequency(e.detail.name).toFrequency().toFixed(1)
+            // note.textContent = e.detail.name
+            // freq.textContent = Tone.Frequency(e.detail.name).toFrequency().toFixed(1)
             
             synth.triggerAttack(e.detail.name)
         })

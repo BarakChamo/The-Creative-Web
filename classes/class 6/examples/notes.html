@@ -20,6 +20,7 @@
         </span>
     <script>
         const synth = new Tone.Synth().toMaster()
+        
         const note = document.querySelector('.note')
         const freq = document.querySelector('.freq')
 
@@ -27,7 +28,7 @@
         document.querySelector('tone-keyboard').addEventListener('noteon', e => {
             note.textContent = e.detail.name
             freq.textContent = Tone.Frequency(e.detail.name).toFrequency().toFixed(1)
-            
+
             synth.triggerAttack(e.detail.name)
         })
 
