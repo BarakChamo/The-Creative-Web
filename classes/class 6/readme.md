@@ -64,6 +64,10 @@ As we've seen before, all discernible sounds are, physically, repeated wave form
 A key element of working with digital sound, beyond time and pitch, is the timbre, tonality, or character of the notes we're playing.
 Modern synthesizers provide incredible control over the "sound" and "character" of a synth.
 
+[Let's experiment with Timbre and different synths on Ableton's Learning Synths](https://learningsynths.ableton.com/synth-basics/changing-the-sound)
+
+Tone.js provides a range of different synths, [here are a few in an example](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/synths.html)
+
 #### Envelopes
 An important aspect of the sound of an instrument, beyond the timbre, is how the various elements of the sound change over time.
 Think of a hit of a key of a piano for example, or plucking a guitar string: the sound begins with a loud, percussive introduction 
@@ -79,13 +83,26 @@ An envelope is typically denoted in `ADSR`:
 `S (sustain)` - The continuous phase of a note, like when a key is being held down.
 `R (release)` - The diminishing phase after a note has been released.
 
-Here's an example of using envelopes on [Ableton's Learning Synths]
+Here's an example of using envelopes on [Ableton's Learning Synths](https://learningsynths.ableton.com/envelopes/change-over-time)
+Learn more about synth envelopes [here](https://github.com/Tonejs/Tone.js/wiki/Envelope).
 
-### The Audio Processing Chain
+[Let's create a custom envelope in Tone.js](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/envelope.htm)
 
 #### Using Effects
+`TBC`
 
 ### Resources
+
+#### Music and Synthesis
+- [Ableton's Learning Synths](https://learningsynths.ableton.com/synth-basics/changing-the-sound)
+- [Ableton's Learning Music](https://learningmusic.ableton.com/make-melodies/love-will-tear-us-apart.html)
+
+#### Tone.js
+- [Getting Started](https://tonejs.github.io/)
+- [Documentation](https://tonejs.github.io/docs/)
+- [Examples](https://tonejs.github.io/examples/oscillator.html)
+
+#### Examples
 
 ### Assignment
 
