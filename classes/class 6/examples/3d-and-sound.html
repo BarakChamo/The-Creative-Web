@@ -47,7 +47,10 @@
 	<!-- three.js container -->
 			<div id="container"></div>
 			<div id="info">
-				<p class="top">Click on a cube to interact with it.</p>
+				<p class="top">
+					Click on a cube to interact with it.
+					<button onclick="enableAudio()">Start Audio</button>
+				</p>
 			</div>
 	<!-- info on screen display -->
 
@@ -55,21 +58,40 @@
 		/*
 			Three.js Setup
 		*/
+
 		var stats, scene, renderer;
         var camera, shouldRaycast;
 
         var cameraTarget = new THREE.Vector3(0,0,0);
         var raycaster = new THREE.Raycaster();
-        var mouse = new THREE.Vector2();
+		var mouse = new THREE.Vector2();
+		var currentMesh;
+ 
+		/*
+			Tone.js Setup
+		*/
 
+		const notes = ['C4', 'D4', 'E4', 'F4', 'G4']
 
+		// Define two synths for drums and notes
+		const drumSynth = new Tone.MembraneSynth().toMaster()
+		const noteSynth = new Tone.Synth().toMaster()
+
+        //create a loop
+        const loop = new Tone.Loop(function(time){
+            drumSynth.triggerAttackRelease("C1", "8n", time)
+        }, "4n")
+
+		//play the loop between 0-2m on the transport
+		loop.start(0)
+		Tone.Transport.start()
 
 		// Bootstrap the animation
 		init();
 		animate();
 
 		// init the scene
-		function init() {
+		function init(){
 			renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			renderer.setClearColor(0xffffff, 0);
@@ -136,6 +158,7 @@
 				mesh.position.set(pointX, 0.5, pointZ);
 				mesh.rotation.set(0.5, 0.5, 0.5);
 				mesh.n = Math.random();
+				mesh.note = notes[i];
 
 				// Add mesh to the scene
 				scene.add(mesh);
@@ -165,7 +188,7 @@
                 var intersections = raycaster.intersectObjects(scene.children);
 
                 // Log all intersections
-                console.log(intersections)
+                // console.log(intersections)
 
                 // Map intersected meshes to the hits array
                 hits = intersections.map(intersection => intersection.object)
@@ -189,7 +212,7 @@
 			camera.lookAt(cameraTarget);
 
 			// iterate over all objects in a scene
-			scene.traverse(function(object3d, i){
+			scene.traverse(function(object3d, i) {
 				// Check if the current object is a THREE.Mesh (rather than a light, camera, etc.)
 				if( object3d instanceof THREE.Mesh === false )	return
 
@@ -201,8 +224,14 @@
                 /* Try animating transitions here! */ 
 
                 // Check if current mesh is hit by the raycast
-                if(hits.includes(object3d))
-                    object3d.scale.set(1.2,1.2,1.2)
+                if(hits.includes(object3d)) {
+					object3d.scale.set(1.2,1.2,1.2)
+					
+					if(object3d !== currentMesh)
+						noteSynth.triggerAttackRelease(object3d.note, "8n")
+
+					currentMesh = object3d
+				}
                 else 
                     object3d.scale.set(1,1,1)
             })

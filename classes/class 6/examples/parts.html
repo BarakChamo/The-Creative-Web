@@ -20,10 +20,10 @@
             <span class="note">NOTE</span> - <span class="freq">FREQUENCY</span>
         </span>
     <script>
-        const synth = new Tone.MembraneSynth().toMaster()
+        const synth = new Tone.DuoSynth().toMaster()
 
         //pass in an array of events
-        var part = new Tone.Part(function(time, event){
+        var part = new Tone.Part(function(time, event) {
             //the events will be given to the callback with the time they occur
             synth.triggerAttackRelease(event.note, event.dur, time)
         }, [
@@ -36,8 +36,8 @@
         //start the part at the beginning of the Transport's timeline
         part.start(0)
         
-        part.loop = true
-        part.loopEnd = '1m'
+        // part.loop = true
+        // part.loopEnd = '1m'
 
         //start/stop the transport
         document.querySelector('tone-play-toggle').addEventListener('change', e => Tone.Transport.toggle())

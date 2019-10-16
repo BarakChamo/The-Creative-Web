@@ -25,6 +25,7 @@
         //create a loop
         const loop = new Tone.Loop(function(time){
             synth.triggerAttackRelease("C1", "8n", time)
+            console.log(time)
         }, "4n")
 
         //play the loop between 0-2m on the transport

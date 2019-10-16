@@ -26,9 +26,9 @@
 
 		document.querySelector("tone-trigger").addEventListener("change", e => {
 			if (e.detail){
-                synth.triggerAttack(["C4", "E4", "A4"]);
+                synth.triggerAttack(["C4", "E4", "A4"], "4n");
 			} else {
-                synth.triggerRelease(["C4", "E4", "A4"]);
+                synth.triggerRelease(["C4", "E4", "A4"], "4n");
 			}
 		});
     </script>
