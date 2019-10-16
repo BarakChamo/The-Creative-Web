@@ -59,14 +59,26 @@ In this example, notice the combination of a master BPM slider that controls the
 ### Understanding Synthesis
 
 #### Timbre and Waveforms
-
 As we've seen before, all discernible sounds are, physically, repeated wave forms. If the amplitude controls the level of a sound (volume) and the frequency the pitch, the shape of a wave defines it's tonal quality.
 
 A key element of working with digital sound, beyond time and pitch, is the timbre, tonality, or character of the notes we're playing.
 Modern synthesizers provide incredible control over the "sound" and "character" of a synth.
 
-
 #### Envelopes
+An important aspect of the sound of an instrument, beyond the timbre, is how the various elements of the sound change over time.
+Think of a hit of a key of a piano for example, or plucking a guitar string: the sound begins with a loud, percussive introduction 
+and slowly diminishes in amplitude, fading over a long tail and often decreasing not only in volume but also in pitch.
+
+These elements of an instrument's sound can be generally described as dynamics and modulation - how parameters of the sound modify and modulate over time.
+
+It's unlikely we want our sounds to harshly start and stop when we hit a key or play a note, and to control the dynamics in relation to the playing of notes we can use an `envelope` - a four-stage curve that defines parameter values (starting with volume) over different phases of a note's playback:
+
+An envelope is typically denoted in `ADSR`:
+`A (attack)` - The initial phase upon a note or sound's start.
+`D (decay)` - The phase following the attack, usually transitioning from a percussive introduction to a sustain pitch.
+`S (sustain)` - The continuous phase of a note, like when a key is being held down.
+`R (release)` - The diminishing phase after a note has been released.
+
 
 ### The Audio Processing Chain
 
