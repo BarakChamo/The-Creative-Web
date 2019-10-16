@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+</head>
+<body>
+        <tone-demo autoplay>
+            <tone-trigger></tone-trigger>
+            <tone-envelope><tone-envelope>
+    
+            <tone-oscillator collapsed frequency><tone-oscillator>
+        </tone-demo>
+    <script>
+		var env = new Tone.AmplitudeEnvelope({
+			"attack" : 0.11,
+			"decay" : 0.21,
+			"sustain" : 0.5,
+			"release" : 1.2
+		}).toMaster();
+
+		//create an oscillator and connect it to the envelope
+		var osc = new Tone.Oscillator({
+			"partials" : [3, 2, 1],
+			"type" : "custom",
+			"frequency" : "C#4",
+			"volume" : -8,
+		}).connect(env).start();
+
+		//bind the interface
+		document.querySelector("tone-envelope").bind(env);
+		document.querySelector("tone-oscillator").bind(osc);
+
+		document.querySelector("tone-trigger").addEventListener("change", e => {
+			if (e.detail){
+				env.triggerAttack();
+			} else {
+				env.triggerRelease();
+			}
+		});
+    </script>
+</body>
+</html>

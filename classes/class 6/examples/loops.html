@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+</head>
+<body>
+        <tone-demo autoplay>
+            <tone-play-toggle></tone-play-toggle>
+            <tone-slider label="bpm" min="60" max="2400" exp="2" value="120"></tone-slider>    
+        </tone-demo>
+
+        <span style="font-weight: bold; position: absolute; bottom: 20px; left: calc(50% - 1em); font-size: 2em;">
+            <span class="note">NOTE</span> - <span class="freq">FREQUENCY</span>
+        </span>
+    <script>
+        const synth = new Tone.MembraneSynth().toMaster()
+
+        //create a loop
+        const loop = new Tone.Loop(function(time){
+            synth.triggerAttackRelease("C1", "8n", time)
+        }, "4n")
+
+        //play the loop between 0-2m on the transport
+        loop.start(0)
+        //.stop('2m')
+
+        //start/stop the transport
+        document.querySelector('tone-play-toggle').addEventListener('change', e => Tone.Transport.toggle())
+
+        // Change the tempo
+        document.querySelector('tone-slider').addEventListener('change', e => Tone.Transport.bpm.value = e.detail)
+    </script>
+</body>
+</html>

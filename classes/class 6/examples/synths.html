@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+</head>
+<body>
+        <tone-demo autoplay>
+            <tone-keyboard octaves="2" polyphonic="true"></tone-keyboard>
+            <tone-slider label="Attack" min="60" max="2400" exp="2" value="120"></tone-slider>    
+            <tone-slider label="Decay" min="60" max="2400" exp="2" value="120"></tone-slider>    
+            <tone-slider label="Sustain" min="60" max="2400" exp="2" value="120"></tone-slider>    
+            <tone-slider label="Release" min="60" max="2400" exp="2" value="120"></tone-slider>    
+        </tone-demo>
+    <script>
+        const synth = new Tone.Synth().toMaster()
+
+        let synth 
+        synth = new Tone.Synth().toMaster()
+        // synth = new Tone.DuoSynth().toMaster()
+        // synth = new Tone.MonoSynth().toMaster()
+        // synth = new Tone.MetalSynth().toMaster()
+        // synth = new Tone.MembraneSynth().toMaster()
+
+        //attach a listener to the keyboard events
+        document.querySelector('tone-keyboard').addEventListener('noteon', e => {
+            note.textContent = e.detail.name
+            freq.textContent = Tone.Frequency(e.detail.name).toFrequency().toFixed(1)
+            
+            synth.triggerAttack(e.detail.name)
+        })
+
+        document.querySelector('tone-keyboard').addEventListener('noteoff', e => {
+            synth.triggerRelease()
+        })
+    </script>
+</body>
+</html>
