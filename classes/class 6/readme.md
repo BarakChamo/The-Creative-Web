@@ -104,4 +104,15 @@ Learn more about synth envelopes [here](https://github.com/Tonejs/Tone.js/wiki/E
 #### Examples
 
 ### Assignment
+For next class, use your new `Tone.js` and incorporate sound and music into an interactive web project.
 
+For your project, choose one of the following:
+1. *A sonic interface* - Using `Three.js`, `P5.js` or any other tool, create an interface for playing sound and music using `Tone.js`, think of how to visualize different qualities of sound we discussed in class (`pitch`, `timbre`, `duration`) and how much creative freedom or formal constrains you'd like to give your users in playing or interacting with your interface (i.e., are you building a piano or a theremin?).
+
+2. *An audio-driven experience* - Using `Three.js`, `P5.js` or any other tool, create an interactive interface, experiment or experience that changes or progresses in response to audio-based events (time, parts, loops, etc.). 
+
+For example, how could an audiovisual scene change every note or every beat to keep it interesting, how could elements of an interactive narrative project respond to musical events and data?
+
+Use `Tone.js` `Loop` and `Part` to trigger events and call code in time with musical events and think of how best to visualize different elements of sound and music (`pitch`, `timbre`, `duration`).
+
+You're of course welcome to incorporate both into a single project!
