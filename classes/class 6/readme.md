@@ -34,6 +34,19 @@ are composed, such as the Major, Minor and Pentatonic scales, each with their ow
 Let's work with notes Tone.js:
 - [Playing notes](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/notes.html)
 
+```javascript
+// Create a new synthesizer and connect it to the master output (speakers)
+const synth = new Tone.Synth().toMaster()
+
+// We can play the synth using musical terms
+// Play a C4 note on the synth for an 8th note
+synth.triggerAttackRelease('C4', '8n')
+
+// Or we can play the synth using physical terms
+// Play the frequency 440hz (A4) for 1 second
+synth.triggerAttackRelease(440, 1)
+```
+
 Notes group together in [scales](https://en.wikipedia.org/wiki/Scale_(music)), subsets of the chromatic scale that maintain
 harmonic consistency and often have distinct musical and emotional chracteristics, such as being percieved as uplifting (Major)
 or melancholic (Minor).
