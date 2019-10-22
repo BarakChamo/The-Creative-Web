@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+</head>
+<body>
+        <tone-demo autoplay>
+            <tone-oscilloscope></tone-oscilloscope>
+            <tone-microphone></tone-microphone>
+        </tone-demo>
+
+        <span style="font-weight: bold; position: absolute; bottom: 20px; left: calc(50% - 1em); font-size: 2em;">
+            <span class="note">NOTE</span>
+        </span>
+    <script>
+
+		//you probably DONT want to connect the microphone
+		//directly to the master output because of feedback.
+		var mic = new Tone.UserMedia();
+
+		//bind the interface
+		document.querySelector("tone-microphone").bind(mic);
+		document.querySelector("tone-oscilloscope").bind(mic);
+    </script>
+</body>
+</html>

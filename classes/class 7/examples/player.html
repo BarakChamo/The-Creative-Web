@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+</head>
+<body>
+        <tone-demo autoplay>
+            <tone-play-toggle></tone-play-toggle>
+            <tone-player></tone-player>
+        </tone-demo>
+    <script>
+        // Create a new Player with a URL to a public MP3 file
+        const player = new Tone.Player('https://freesound.org/data/previews/367/367738_5994268-lq.mp3',
+        (arg) => {
+            console.log('Loaded!')
+        }).toMaster()
+
+        // Set the player to autostart once the file is loaded
+        player.autostart = true
+
+        // set the player to loop
+        player.loop = true
+
+        // set the player to play back at double speed
+        player.playbackRate = 2
+
+        // Set player loop points
+        player.setLoopPoints(0.5, 2)
+
+		//bind the interface
+		document.querySelector("tone-player").bind(player);
+		document.querySelector("tone-play-toggle").bind(player);
+	
+    </script>
+</body>
+</html>

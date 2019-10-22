@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+</head>
+<body>
+        <tone-demo autoplay>
+            <tone-keyboard octaves="3" polyphonic="true"></tone-keyboard>
+        </tone-demo>
+
+        <span style="font-weight: bold; position: absolute; bottom: 20px; left: calc(50% - 1em); font-size: 2em;">
+            <span class="note">NOTE</span>
+        </span>
+    <script>
+        // Create a new Player with a URL to a public MP3 file
+        const sampler = new Tone.Sampler({
+            A3: 'https://freesound.org/data/previews/367/367738_5994268-lq.mp3'
+        },
+        (arg) => {
+            console.log('Loaded!')
+        }).toMaster()
+
+        // Set attack and release times 
+        sampler.attack = 0.1
+        sampler.release = 0.1
+
+        const note = document.querySelector('.note')
+
+        //attach a listener to the keyboard events
+        document.querySelector('tone-keyboard').addEventListener('noteon', e => {
+            note.textContent = e.detail.name
+
+            sampler.triggerAttackRelease(e.detail.name, '2n')
+        })
+    </script>
+</body>
+</html>
