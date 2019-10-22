@@ -33,6 +33,7 @@ are composed, such as the Major, Minor and Pentatonic scales, each with their ow
 
 Let's work with notes Tone.js:
 - [Playing notes](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/notes.html)
+- [Tone.js Synth documentation](https://tonejs.github.io/docs/13.8.25/Synth)
 
 ```javascript
 // Create a new synthesizer and connect it to the master output (speakers)
@@ -55,6 +56,18 @@ or melancholic (Minor).
 
 Let's work with chords Tone.js:
 - [Playing chords](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/polyphony.html)
+- [Tone.js PolySynth documentation](https://tonejs.github.io/docs/13.8.25/PolySynth)
+
+```javascript
+// To play multiple sounds simultaniously, we have to create a PolySynth, it will create several synths internally.
+// You can create a poly synth from any of the Tone.js synths, let's create one with the basic Tone.Synth
+// The first argument is the max number of voices and the second is the synth to use 
+const synth = new Tone.PolySynth(6, Tone.Synth).toMaster();
+
+// We can now play multiple notes by passing an array of notes or frequencies
+synth.triggerAttackRelease(["C4", "E4", "A4"], "4n");
+```
+
 
 
 #### Time in music (and Tone.js)
@@ -66,7 +79,63 @@ individual note played, typically described in parts of a bar or beat, (`1/8`, `
 In this example, notice the combination of a master BPM slider that controls the overall speed of playback, and the set duration of each of the notes.
 
 - [Loops in Tone.js](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/loops.html)
+
+```javascript
+// Begin by defining a synth and connecting it to the master output
+const synth = new Tone.MembraneSynth().toMaster()
+
+//create a loop and pass it a handler
+// Note that all the loop does is trigger the callback in accordance with musical time
+// It's up to you to actually play a synthesizer inside, or do anything else!
+const loop = new Tone.Loop(function(time){
+
+// Trigger a synth on every run of the loop
+  synth.triggerAttackRelease("C1", "8n", time)
+
+}, "4n")
+
+
+//Start the loop immediately
+loop.start(0)
+
+// Stop the loop in two measures
+loop.stop('2m')
+
+// Finally, start the global Tone.js transport, it's the same as hitting Play on a record player!
+Tone.Transport.start()
+```
+
+To create more complex compositions and trigger custom events, use the `Part` instead of a `Loop`
+
 - [Let's see how to work with time and duration in Tone.js](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/parts.html)
+
+```javascript
+// Begin by defining a synth and connecting it to the master output
+const synth = new Tone.DuoSynth().toMaster()
+
+// Create a Tone.js Part and pass a callback function and an array of events
+// Each event must have a `time` key but could also hold any other information, the callback will receive the event as an argument
+var part = new Tone.Part(function(time, event) {
+    // the events will be given to the callback with the time they occur
+    // Here we read the note and dur (duration) keys to trigger a different note for a different duration every time
+    synth.triggerAttackRelease(event.note, event.dur, time)
+  }, [
+    { time : 0, note : 'C4', dur : '4n'},
+    { time : {'4n' : 1, '8n' : 1}, note : 'E4', dur : '8n'},
+    { time : '2n', note : 'G4', dur : '16n'},
+    { time : {'2n' : 1, '8t' : 1}, note : 'B4', dur : '4n'}
+  ]
+)
+
+//start the part at the beginning of the Transport's timeline
+part.start(0)
+
+// You can mark the part to loop
+part.loop = true
+
+// And finally, start the global transport
+Tone.Transport.start()
+```
 
 ### Understanding Synthesis
 
@@ -95,6 +164,9 @@ An envelope is typically denoted in `ADSR`:
 `S (sustain)` - The continuous phase of a note, like when a key is being held down.
 `R (release)` - The diminishing phase after a note has been released.
 
+These can be visualized as a graph with multiple linear interpolations:
+![ADSR Envelope](https://libremusicproduction.com/sites/default/files/answers/adsrenvelope.png)
+
 Here's an example of using envelopes on [Ableton's Learning Synths](https://learningsynths.ableton.com/envelopes/change-over-time)
 Learn more about synth envelopes [here](https://github.com/Tonejs/Tone.js/wiki/Envelope).
 
@@ -115,6 +187,13 @@ Learn more about synth envelopes [here](https://github.com/Tonejs/Tone.js/wiki/E
 - [Examples](https://tonejs.github.io/examples/oscillator.html)
 
 #### Examples
+- [Playing single notes](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/notes.html)
+- [Playing multiple notes and chords](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/polyphony.html) 
+- [Tone.js Synthesizers](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/synths.html)
+- [Playing a simple loop](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/notes.html)
+- [Playing more complex parts](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/parts.html)
+- [The synth ADSR envelope](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/envelope.html)
+- [An example of audiovisualization with Three.js and Tone.js](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%206/examples/envelope.html)
 
 ### Assignment
 For next class, use your new `Tone.js` and incorporate sound and music into an interactive web project.
