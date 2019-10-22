@@ -71,18 +71,23 @@
 			Tone.js Setup
 		*/
 
+		// Define a list of notes in a scale
+		// we'll assign these notes to our 3D meshes as extra data
 		const notes = ['C4', 'D4', 'E4', 'F4', 'G4']
 
 		// Define two synths for drums and notes
 		const drumSynth = new Tone.MembraneSynth().toMaster()
 		const noteSynth = new Tone.Synth().toMaster()
 
-        //create a loop
+       		 //create a loop that repeats every quarter note, or beat - 4n
 		const loop = new Tone.Loop(function(time){
 			// Play drum synth
 			drumSynth.triggerAttackRelease("C1", "8n", time)
 			
 			// Change color of Three.js spheres
+			// Remember we can use the Loop and Part to do anything we want in code,
+			// in musical time!
+			// Let's change the color of all the spheres
 			scene.traverse(function(object3d, i) {
 				// Check if the current object is a THREE.Mesh (rather than a light, camera, etc.)
 				if( object3d instanceof THREE.Mesh === false )	return
@@ -172,7 +177,9 @@
 				mesh.rotation.set(0.5, 0.5, 0.5);
 				mesh.n = Math.random();
 
+				// !!! Tone.js setup !!!				
 				// assign a musical note to every sphere
+				// We'll read these values in the raycasting part of the animation loop
 				mesh.note = notes[i];
 
 				// Add mesh to the scene
@@ -218,7 +225,7 @@
 
 			// Rotate view camera around scene
 			var x = camera.position.x;
-            var z = camera.position.z;
+		        var z = camera.position.z;
 
 			camera.position.x = x * Math.cos(0.01) + z * Math.sin(0.01);
 			camera.position.z = z * Math.cos(0.01) - x * Math.sin(0.01);
@@ -243,6 +250,8 @@
 					object3d.scale.set(1.2,1.2,1.2)
 					
 					if(object3d !== currentMesh)
+						// Here we read back the object3d.note value we assigned
+						// and use that value to trigger a different note for every sphere
 						noteSynth.triggerAttackRelease(object3d.note, "8n")
 
 					currentMesh = object3d
