@@ -60,7 +60,43 @@ const sampler = new Tone.Sampler({
 [Here's an example on using the `Player`](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%207/examples/player.html)
 
 #### Using the Tone.js `Microphone`
+Tone.js uses the browser's underlying Media API to access user devices and media, the `getUserMedia()` API.
+Right now, this can be useful for us to get access to the local microphone, but later in the class we'll
+learn how to use it also connect to remote audio and video streams using WebRTC!
+
+```javascript
+//you probably DONT want to connect the microphone
+//directly to the master output because of feedback.
+var mic = new Tone.UserMedia();
+
+//opening the input asks the user to activate their mic
+mic.open()
+    .then(function(){
+	//promise resolves when input is available
+    })
+    .catch(function(){
+	//promise rejects if the input is unavailable
+    });
+```
 
 
 ### Getting data out
+While connecting the microphone directly to the output might not be something we want to do (as it will trigger a deafening feedback loop), we can use the microphone as a data source by analyzing the input signal!
+
+### Using control signals
+We can use signal in Tone.js not only as sound but also as a means of controlling other parameters, this is called `modulation` or `automation`
+
+
+
+A `Follower` envelope uses the signal level of one input to control parameters on another, meaning we can use the sound level
+on our microphone to control the volume of another synth!
+
+The follower takes two arguments, the duration of the rise and fall of the following envelope:
+
+```javascript
+var follower = new Tone.Follower(0.2, 0.4);
+```
+
+### Binding to 3D data
+
 
