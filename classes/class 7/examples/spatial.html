@@ -62,19 +62,19 @@
         */
         var greenSphere = new Tone.Panner3D().toMaster();
 		var drone = new Tone.Player({
-			url : "https://freesound.org/data/previews/42/42761_454894-lq.mp3",
+			url : "https://freesound.org/data/previews/24/24940_113878-lq.mp3",
 			loop : true,
 		}).connect(greenSphere).sync().start(0);
 
 		var blueSphere = new Tone.Panner3D().toMaster();
 		var repeat = new Tone.Player({
-			url : "https://freesound.org/data/previews/370/370754_3104030-lq.mp3",
+			url : "https://freesound.org/data/previews/489/489458_4397472-lq.mp3",
 			loop : true,
 		}).connect(blueSphere).sync().start(0);
 
 		var whiteSphere = new Tone.Panner3D().toMaster();
 		var chords = new Tone.Player({
-			url : "https://freesound.org/data/previews/428/428956_5121236-lq.mp3",
+			url : "https://freesound.org/data/previews/186/186942_2594536-lq.mp3",
 			loop : true,
 		}).connect(whiteSphere).sync().start(0);
 
