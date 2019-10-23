@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Introduction to Three.js - Raycasting</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+			
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/three-trackballcontrols-web@0.0.2/dist/three-trackballcontrols.js"></script>
+		<script src="https://unpkg.com/tone"></script>
+
+		<style>
+			body {
+				overflow	: hidden;
+				padding		: 0;
+				margin		: 0;
+
+				color		: #222;
+				background: linear-gradient(to bottom,  #EEE 0%,#CCC 100%);
+				font-family	: monospace;
+				font-size	: 100%;
+			}
+			#info .top {
+				position	: absolute;
+				top		: 0px;
+				width		: 100%;
+				padding		: 5px;
+				text-align	: center;
+			}
+			#info a {
+				color		: #66F;
+				text-decoration	: none;
+			}
+			#info a:hover {
+				text-decoration	: underline;
+			}
+			#info .bottom {
+				position	: absolute;
+				bottom		: 0px;
+				right		: 5px;
+				padding		: 5px;
+			}
+		</style>
+	</head>
+<body>
+	<!-- three.js container -->
+			<div id="container"></div>
+			<div id="info">
+				<p class="top">
+					Click on a cube to interact with it.
+					<button onclick="toggleAudio()">Toggle Audio</button>
+				</p>
+			</div>
+	<!-- info on screen display -->
+
+	<script type="text/javascript">
+		/*
+			Three.js Setup
+		*/
+
+		var stats, scene, renderer;
+        var camera, shouldRaycast;
+		var spheres = [];
+
+        var cameraTarget = new THREE.Vector3(0,0,0);
+        var raycaster = new THREE.Raycaster();
+		var mouse = new THREE.Vector2();
+		var currentMesh;
+		var spinSpeed = 0;
+ 
+
+		/*
+			Tone.js Setup
+		*/
+
+		// Create a player and set it to autoplay
+		const player = new Tone.Player({
+			url: 'https://freesound.org/data/previews/24/24940_113878-lq.mp3',
+			loop: true,
+			// autostart: true,
+		}).toMaster()
+
+		// create analyzers
+		const meter = new Tone.Meter(32) // argument is smoothing factor
+		const fft = new Tone.FFT(32)
+		const waveform = new Tone.Waveform(32)
+
+		// connect destination to analyzers
+		Tone.Master.chain(meter, fft, waveform)
+
+		// Start the Tone.js transport (like hitting play)
+		Tone.Transport.start()
+
+		function toggleAudio() {
+			player.state === 'stopped' ? player.start() : player.stop()
+		}
+
+
+		/*
+			Bootstrap
+		*/ 
+
+		// Bootstrap the animation
+		init();
+		animate();
+
+		// init the scene
+		function init() {
+			renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setClearColor(0xffffff, 0);
+
+
+			// Append the renderer's <canvas> element to the screen
+			document.getElementById('container').appendChild(renderer.domElement);
+
+			// Resize canvas when the screen resizes
+			document.addEventListener('resize', function() {
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+				renderer.setSize(width, height);
+			}, false);
+
+			// create the root scene
+			scene = new THREE.Scene();
+
+			/* Camera */ 
+
+			// create the view camera
+			camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20 );
+			camera.position.set(0, 3, 2); // Position the camera above and away from the scene
+			camera.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add(camera);
+
+			/* Lights */
+
+			// Add lights to the scene
+			var light1	= new THREE.AmbientLight( Math.random() * 0xffffff );
+			scene.add( light1 );
+
+			// Add random directional light at random position
+			var light2	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+			light2.position.set( Math.random(), Math.random(), Math.random() ).normalize().multiplyScalar(3);
+			light2.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add( light2 );
+
+			// Add another random light
+			var light3	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+			light3.position.set( Math.random(), Math.random(), Math.random() ).normalize().multiplyScalar(3);
+			light3.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add(light3);
+
+
+			/* Geometry */ 
+			
+			var geometry, material, mesh, randomPoint;
+			var numSpheres = 32;
+
+			function randomInCube(scale) {
+				return new THREE.Vector3(
+					(0.5 - Math.random()) * scale,
+					(0.5 - Math.random()) * scale,
+					(0.5 - Math.random()) * scale,
+				)
+			}
+
+			for (let i = 0; i < numSpheres; i++) {
+				// Create a cube gemetry
+				geometry = new THREE.SphereGeometry( 0.1, 0.1, 0.1 );
+					
+				// Create a new material for every mesh so we can color them separately
+				material = new THREE.MeshPhongMaterial({color: Math.random() * 0xffffff});
+				material.flatShading = true;
+
+				// Computer random position inside a 
+
+				mesh	= new THREE.Mesh( geometry, material );
+				mesh.position.copy(randomInCube(2));
+				mesh.rotation.set(0.5, 0.5, 0.5);
+				mesh.n = Math.random();
+
+				// Add mesh to the scene
+				scene.add(mesh);
+				spheres.push(mesh);
+			}
+		}
+
+		// animation loop
+		function animate() {
+			// Call the function again when the browser is free 
+			requestAnimationFrame( animate );
+
+			// do the render
+			render();
+		}
+
+		// render the scene
+		function render() {
+			// Get audio analysis values
+            const level = -meter.getValue()
+			const freqDomain = fft.getValue()
+			const timeDomain = waveform.getValue()
+
+			// variable which is increase by Math.PI every seconds - usefull for animation
+			var time = Date.now() * Math.PI;
+
+			// Rotate view camera around scene
+			var x = camera.position.x;
+			var z = camera.position.z;
+			var d = Math.max(level * 1, 0) / 10 // avoid -infinity when no audio playing
+
+			spinSpeed = Math.max(spinSpeed * 0.85 + d, 0)
+
+			camera.position.x = x * Math.cos(0.01) + z * Math.sin(0.01 + spinSpeed);
+			camera.position.z = z * Math.cos(0.01 + spinSpeed) - x * Math.sin(0.01 + spinSpeed/2);
+
+			// re-Rotate the camerea to look at the cameraTarget at the center of the scene
+			camera.lookAt(cameraTarget);
+			console.log(timeDomain)
+			spheres.forEach((sphere, i) => {
+				// Rotate object based on `n` coefficient
+				sphere.rotateY(0.01 * sphere.n);
+				sphere.rotateX(0.02 * sphere.n);
+                sphere.rotateZ(0.03 * sphere.n);
+
+				// set scale according to current audio level in frequency bin
+				const s = 0.75 + -60 / freqDomain[i]
+				sphere.scale.set(s,s,s)
+
+				// set color according to current audio level in time domain
+				const c = Math.abs(timeDomain[i]) / 15
+				sphere.material.color.offsetHSL(c, 0, 0) 
+			})
+
+			// actually render the scene
+			renderer.render( scene, camera );
+        }
+        
+        window.addEventListener('mousemove', function (event) {
+            // calculate mouse position in normalized device coordinates
+            // (-1 to +1) for both components
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        })
+
+        window.addEventListener('mousedown', function (event) {
+            shouldRaycast = true;
+        })
+
+        window.addEventListener('mouseup', function (event) {
+            shouldRaycast = false;
+        })
+
+
+	</script>
+</body>
+</html>
