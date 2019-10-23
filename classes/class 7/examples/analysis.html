@@ -9,9 +9,6 @@
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
     <script src="https://unpkg.com/tone"></script>
     <script src="https://unpkg.com/@tonejs/ui"></script>
-    <script>
-        Tone.FFT.construc
-    </script>
 </head>
 <body>
         <tone-demo autoplay>
@@ -50,8 +47,8 @@
 
         // let's define a small animation loop that will get the analysis values
         function analyze() {
-            console.log('Meter - ' + meter.getLevel())
-            console.log('FFT - ' + fft.getValue())
+            // console.log('Meter - ' + meter.getValue())
+            // console.log('FFT - ' + fft.getValue())
             console.log('Waveform - ' + waveform.getValue())
 
             // Call another run of the analyze update

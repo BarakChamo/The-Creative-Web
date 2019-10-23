@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Introduction to Three.js - Raycasting</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+			
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.js"></script>
+        <script src="./orbit.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/three-trackballcontrols-web@0.0.2/dist/three-trackballcontrols.js"></script>
+		<script src="https://unpkg.com/tone"></script>
+        <script src="./Three.Tone.js"></script>
+
+		<style>
+			body {
+				overflow	: hidden;
+				padding		: 0;
+				margin		: 0;
+
+				color		: #222;
+				background: linear-gradient(to bottom,  #EEE 0%,#CCC 100%);
+				font-family	: monospace;
+				font-size	: 100%;
+			}
+			#info .top {
+				position	: absolute;
+				top		: 0px;
+				width		: 100%;
+				padding		: 5px;
+				text-align	: center;
+			}
+			#info a {
+				color		: #66F;
+				text-decoration	: none;
+			}
+			#info a:hover {
+				text-decoration	: underline;
+			}
+			#info .bottom {
+				position	: absolute;
+				bottom		: 0px;
+				right		: 5px;
+				padding		: 5px;
+			}
+		</style>
+	</head>
+<body>
+	<!-- three.js container -->
+			<div id="container"></div>
+			<div id="info">
+				<p class="top">
+					Click on a cube to interact with it.
+					<button onclick="toggleAudio()">Toggle Audio</button>
+				</p>
+			</div>
+	<!-- info on screen display -->
+
+	<script type="text/javascript">
+        /*
+            Tone.JS
+        */
+        var greenSphere = new Tone.Panner3D().toMaster();
+		var drone = new Tone.Player({
+			url : "https://freesound.org/data/previews/42/42761_454894-lq.mp3",
+			loop : true,
+		}).connect(greenSphere).sync().start(0);
+
+		var blueSphere = new Tone.Panner3D().toMaster();
+		var repeat = new Tone.Player({
+			url : "https://freesound.org/data/previews/370/370754_3104030-lq.mp3",
+			loop : true,
+		}).connect(blueSphere).sync().start(0);
+
+		var whiteSphere = new Tone.Panner3D().toMaster();
+		var chords = new Tone.Player({
+			url : "https://freesound.org/data/previews/428/428956_5121236-lq.mp3",
+			loop : true,
+		}).connect(whiteSphere).sync().start(0);
+
+        
+        function toggleAudio() {
+            Tone.context.resume()
+            Tone.Transport.start(0)
+        }
+
+        /*
+            Three.JS
+        */
+		
+        var SCREEN_WIDTH = document.querySelector("#container").clientWidth;
+        var SCREEN_HEIGHT = document.querySelector("#container").clientHeight;
+        var aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+
+        console.log(SCREEN_WIDTH, SCREEN_HEIGHT, aspect);
+
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(50, aspect, 1, 10000);
+        camera.position.z = 1;
+        camera.updateMatrixWorld();
+
+        var bassMesh = new THREE.Mesh(
+            new THREE.SphereBufferGeometry(2, 16, 8),
+            new THREE.MeshBasicMaterial({ color : 0xffffff, wireframe : true })
+        );
+        scene.add(bassMesh);
+        bassMesh.position.z = -10;
+
+        var dronMesh = new THREE.Mesh(
+            new THREE.SphereBufferGeometry(1, 16, 8),
+            new THREE.MeshBasicMaterial({ color : 0xff0000, wireframe : true })
+        );
+        scene.add(dronMesh);
+
+        var chordMesh = new THREE.Mesh(
+            new THREE.SphereBufferGeometry(1, 16, 8),
+            new THREE.MeshBasicMaterial({ color : 0xff00ff, wireframe : true })
+        );
+        scene.add(chordMesh);
+
+        var renderer = new THREE.WebGLRenderer({ antialias : true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        
+        onWindowResize();
+        
+        renderer.domElement.style.position = "relative";
+        document.querySelector("#container").appendChild(renderer.domElement);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.addEventListener("change", function(){
+            Tone.Listener.updatePosition(camera);
+        });
+        
+        //set the initial listener to the camera position
+        Tone.Listener.updatePosition(camera);
+
+        function onWindowResize(event){
+            SCREEN_WIDTH = window.innerWidth// document.querySelector("#container").clientWidth;
+            SCREEN_HEIGHT = window.innerHeight // document.querySelector("#container").clientHeight;
+            aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+            camera.aspect = aspect;
+            renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+            camera.updateProjectionMatrix();
+        }
+
+        window.addEventListener("resize", onWindowResize);
+
+        function animate(){
+            var r = Date.now() * 0.0005;
+            
+            chordMesh.position.x = 3 * Math.cos(r);
+            chordMesh.position.z = 3 * Math.cos(r);
+            chordMesh.position.y = 3 * Math.sin(r);
+            
+            dronMesh.position.x = 4 * Math.cos(2 * r);
+            dronMesh.position.z = 4 * Math.sin(2 * r);
+            
+            renderer.render(scene, camera);
+            
+            controls.update();
+            
+            greenSphere.updatePosition(dronMesh);
+            blueSphere.updatePosition(bassMesh);
+            whiteSphere.updatePosition(chordMesh);
+            
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+	</script>
+</body>
+</html>
