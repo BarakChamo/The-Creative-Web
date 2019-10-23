@@ -198,7 +198,7 @@
 		// render the scene
 		function render() {
 			// Get audio analysis values
-            const level = -meter.getValue()
+            const level = meter.getValue()
 			const freqDomain = fft.getValue()
 			const timeDomain = waveform.getValue()
 
@@ -208,7 +208,7 @@
 			// Rotate view camera around scene
 			var x = camera.position.x;
 			var z = camera.position.z;
-			var d = Math.max(level * 1, 0) / 10 // avoid -infinity when no audio playing
+			var d = Math.max(-level, 0) / 10 // avoid -infinity when no audio playing
 
 			spinSpeed = Math.max(spinSpeed * 0.85 + d, 0)
 
