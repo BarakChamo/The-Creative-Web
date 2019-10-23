@@ -114,7 +114,7 @@ function analyze() {
 
 [Here's an example of using all three analysers](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%207/examples/analysis.html)
 
-### Using control signals
+#### Using control signals
 We can also use signal in Tone.js not only as sound but also as a means of controlling other parameters, this is called `modulation` or `automation`. The follower is quite similar to the `meter`, but instead of returning volume levels we can use them as a control.
 
 A `Follower` envelope uses the signal level of one input to control parameters on another, meaning we can use the sound level
@@ -136,6 +136,11 @@ follower.connect(osc.volume)
 
 [Here's an example of a microphone and a follower to modulate an oscillator](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%207/examples/follower.html)
 
-### Binding to 3D data
 
+## Resources
 
+### Examples of web-based music visualization
+- [Bad Bad Not Good](https://uberviz.io/viz/bbng/)
+- [Word Problems](https://uberviz.io/viz/word-problems/)
+- [Pareidolia](https://www.airtightinteractive.com/demos/js/pareidolia/)
+- [Particle Equalizer](https://avseoul.net/particleEqualizer/)
