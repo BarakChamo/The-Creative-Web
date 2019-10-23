@@ -9,11 +9,14 @@
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
     <script src="https://unpkg.com/tone"></script>
     <script src="https://unpkg.com/@tonejs/ui"></script>
+    <script>
+        Tone.FFT.construc
+    </script>
 </head>
 <body>
         <tone-demo autoplay>
-            <tone-oscilloscope style="width:400px; height:50px;margin-bottom: 50px;"></tone-oscilloscope>
             <tone-microphone></tone-microphone>
+            <tone-oscilloscope style="width:400px; height:50px;margin-bottom: 50px;"></tone-oscilloscope>
             <tone-meter style="width:400px; height:50px;margin-top: 50px;"></tone-meter>
             <tone-fft style="width:400px; height:50px;margin-top: 50px;"></tone-fft>
         </tone-demo>
@@ -34,6 +37,32 @@
             .catch(function(){
                 //promise rejects if the input is unavailable
             });
+
+        // create an FFT and Waveform analyzer
+        const fft = new Tone.FFT(32) // minimum fft bucket size is 16
+        const waveform = new Tone.Waveform(32) // minimum bucket size for waveform is 32
+        const meter = new Tone.Meter()
+
+        // Connect the microphone input to both analyzers
+        mic.connect(fft)
+        mic.connect(waveform)
+        mic.connect(meter)
+
+        // let's define a small animation loop that will get the analysis values
+        function analyze() {
+            console.log('Meter - ' + meter.getLevel())
+            console.log('FFT - ' + fft.getValue())
+            console.log('Waveform - ' + waveform.getValue())
+
+            // Call another run of the analyze update
+            requestAnimationFrame(analyze)
+        }
+
+        requestAnimationFrame(analyze)
+
+        // Demo related stuff, ignore this
+        document.querySelector("tone-fft")._fft = fft;
+
 
 		//bind the interface
 		document.querySelector("tone-microphone").bind(mic);

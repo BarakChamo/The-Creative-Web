@@ -22,13 +22,25 @@
             <span class="note">Audio Level</span>
         </span>
     <script>
+        // Create a synthesizer
+        const osc = new Tone.Oscillator({type:'square'}).toMaster();
+
 		//you probably DONT want to connect the microphone
 		//directly to the master output because of feedback.
 		const mic = new Tone.UserMedia();
 
+        // Reduce the volume of the mic to prevent a feedback loop
+        mic.volume.value = -10
+
+        // Create a follower and connect the microphone as an input
+        const follower = new Tone.Follower(0.1)
+        mic.connect(follower)
+
         //opening the input asks the user to activate their mic
         mic.open()
             .then(function(){
+                osc.start()
+                follower.connect(osc.volume)
                 //promise resolves when input is available
             })
             .catch(function(){
