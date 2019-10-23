@@ -79,23 +79,62 @@ mic.open()
     });
 ```
 
-
 ### Getting data out
 While connecting the microphone directly to the output might not be something we want to do (as it will trigger a deafening feedback loop), we can use the microphone as a data source by analyzing the input signal!
 
+Just like we can connect an audio source to the `master` output, we can also connect sources to a range of effects, chains and other 
+utilities, some of these are a group of `analysis` nodes. Tone.js provides a few different analyzers:
+
+- `Meter` - analyses overall loudness or volume using an RMS Power algorithm
+- `Waveform` - captures a window of the sound playing, it represents the compound waveform level over the **time** domain
+- `FFT` - A Fast-Fourier transform on the aformentioned waveform, providing levels in frequency buckets, or an analysis of the **frequency** domain
+
+`Meter` provides a single overall `level` value while both `Waveform` and `FFT` provide an array of values over their respective domains (time and frequency).
+
+Here's how to create all three:
+```javascript
+// create an FFT and Waveform analyzer
+const waveform = new Tone.Waveform(32) // minimum bucket size for waveform is 32
+const fft = new Tone.FFT(32) // minimum fft bucket size is 16 but we'll match the waveform
+const meter = new Tone.Meter() // meter provides a single value
+
+// Connect the source input to all analyzers
+source.connect(fft)
+source.connect(waveform)
+source.connect(meter)
+
+// in your code, read the values from each analyser
+
+function analyze() {
+    console.log('Meter - ' + meter.getLevel())
+    console.log('FFT - ' + fft.getValue())
+    console.log('Waveform - ' + waveform.getValue())
+}
+```
+
+[Here's an example of using all three analysers](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%207/examples/analysis.html)
+
 ### Using control signals
-We can use signal in Tone.js not only as sound but also as a means of controlling other parameters, this is called `modulation` or `automation`
-
-
+We can also use signal in Tone.js not only as sound but also as a means of controlling other parameters, this is called `modulation` or `automation`. The follower is quite similar to the `meter`, but instead of returning volume levels we can use them as a control.
 
 A `Follower` envelope uses the signal level of one input to control parameters on another, meaning we can use the sound level
 on our microphone to control the volume of another synth!
 
-The follower takes two arguments, the duration of the rise and fall of the following envelope:
+The follower takes two arguments, the duration of the rise and fall of the following envelope, we connect it to any parameter
+we wish to modulate on a synth or oscillator:
 
 ```javascript
+var source = *your audio source, such as a microphone or player*
 var follower = new Tone.Follower(0.2, 0.4);
+
+// connect the source as the input of the follower, just like a meter
+source.connect(follower)
+
+// then connect the follower not to the output but to the parameter you want to automate
+follower.connect(osc.volume)
 ```
+
+[Here's an example of a microphone and a follower to modulate an oscillator](https://github.com/BarakChamo/The-Creative-Web/blob/master/classes/class%207/examples/follower.html)
 
 ### Binding to 3D data
 
