@@ -1,0 +1,291 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Introduction to Three.js - Raycasting</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+			
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/three-trackballcontrols-web@0.0.2/dist/three-trackballcontrols.js"></script>
+        <script src="https://unpkg.com/tone"></script>
+        <script src="webmidi.js"></script>
+
+		<style>
+			body {
+				overflow	: hidden;
+				padding		: 0;
+				margin		: 0;
+
+				color		: #222;
+				background: linear-gradient(to bottom,  #EEE 0%,#CCC 100%);
+				font-family	: monospace;
+				font-size	: 100%;
+			}
+			#info .top {
+				position	: absolute;
+				top		: 0px;
+				width		: 100%;
+				padding		: 5px;
+				text-align	: center;
+			}
+			#info a {
+				color		: #66F;
+				text-decoration	: none;
+			}
+			#info a:hover {
+				text-decoration	: underline;
+			}
+			#info .bottom {
+				position	: absolute;
+				bottom		: 0px;
+				right		: 5px;
+				padding		: 5px;
+			}
+		</style>
+	</head>
+<body>
+	<!-- three.js container -->
+			<div id="container"></div>
+			<div id="info">
+				<p class="top">Click on a cube to interact with it.</p>
+			</div>
+	<!-- info on screen display -->
+
+	<script type="text/javascript">
+		/*
+			Three.js Setup
+		*/
+		var stats, scene, renderer, group;
+        var camera, shouldRaycast;
+
+        var cameraTarget = new THREE.Vector3(0,0,0);
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+
+		/*
+			WebMIDI Setup
+		*/
+
+        var groupX = 0
+        var groupY = 0
+        var groupZ = 0
+        WebMidi.enable(function(err) {
+            if (err) console.log("An error occurred", err);
+            
+            console.log(WebMidi.inputs)
+            
+            WebMidi.inputs[0].addListener("controlchange", "all", function(e) {
+                console.log(`Controller: ${e.controller.number} Value: ${e.value}`)
+                
+                let value = e.value / 127
+                value * Math.PI
+
+                switch (e.controller.number) {
+                    case 0: // left
+                        groupX = value
+                        break;
+                    
+                    case 1: // forward
+                        groupY = value          
+                        break;
+
+                    case 2: // right
+                        groupX = -value
+                        break;
+
+                    case 3: // backward
+                        groupY = -value
+                        break;
+                    
+                    case 4: // right
+                        groupZ = -value
+                        break;
+
+                    case 5: // backward
+                        groupZ = -value
+                        break;
+                    
+                    case 6:
+                        group.traverse(sphere => sphere.scale.set(e.value / 127, e.value / 127, e.value / 127))
+                        break;
+                }
+
+                group.rotation.set(groupX, groupY, groupZ)
+            });
+
+            WebMidi.inputs[0].addListener("noteon", "all", function(e) {
+                console.log('NOTE ON', `Name: ${e.note.name} Octave: ${e.note.octave} Velocity: ${e.velocity.toFixed(2)}`)
+            });
+
+            WebMidi.inputs[0].addListener("noteoff", "all", function(e) {
+                console.log('NOTE OFF', `Name: ${e.note.name} Octave: ${e.note.octave} Velocity: 0`)
+            });
+        });
+
+		// Bootstrap the animation
+		init();
+		animate();
+
+		// init the scene
+		function init() {
+			renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setClearColor(0xffffff, 0);
+
+
+			// Append the renderer's <canvas> element to the screen
+			document.getElementById('container').appendChild(renderer.domElement);
+
+			// Resize canvas when the screen resizes
+			document.addEventListener('resize', function() {
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+				renderer.setSize(width, height);
+			}, false);
+
+			// create the root scene
+			scene = new THREE.Scene();
+
+			/* Camera */ 
+
+			// create the view camera
+			camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 20 );
+			camera.position.set(0, 4, 3); // Position the camera above and away from the scene
+			camera.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add(camera);
+
+			/* Lights */
+
+			// Add lights to the scene
+			var light1	= new THREE.AmbientLight( Math.random() * 0xffffff );
+			scene.add( light1 );
+
+			// Add random directional light at random position
+			var light2	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+			light2.position.set( Math.random(), Math.random(), Math.random() ).normalize().multiplyScalar(3);
+			light2.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add( light2 );
+
+			// Add another random light
+			var light3	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+			light3.position.set( Math.random(), Math.random(), Math.random() ).normalize().multiplyScalar(3);
+			light3.lookAt(cameraTarget); // Tell the camera to aim at our cameraTarget
+			scene.add(light3);
+
+
+			/* Geometry */ 
+			
+			var geometry, material, mesh, randomPoint;
+			var numCubes = 5;
+            var cubes = [];
+            group = new THREE.Object3D()
+            scene.add(group)
+
+			for (let i = 0; i < numCubes; i++) {
+				// Create a cube gemetry
+				geometry = new THREE.SphereGeometry( 0.5, 0.5, 0.5 );
+					
+				// Create a new material for every mesh so we can color them separately
+				material = new THREE.MeshPhongMaterial({color: Math.random() * 0xffffff});
+                material.flatShading = true;
+
+				pointX = Math.sin(2 * Math.PI * (i / numCubes));
+				pointZ = Math.cos(2 * Math.PI * (i / numCubes));
+
+				mesh	= new THREE.Mesh( geometry, material );
+				mesh.position.set(pointX, 0.5, pointZ);
+				mesh.rotation.set(0.5, 0.5, 0.5);
+				mesh.n = Math.random();
+
+				// Add mesh to the scene
+				// scene.add(mesh);
+                group.add(mesh)
+				cubes.push(mesh);
+			}
+		}
+
+		// animation loop
+		function animate() {
+			// Call the function again when the browser is free 
+			requestAnimationFrame( animate );
+
+			// do the render
+			render();
+		}
+
+		// render the scene
+		function render() {
+            /* Raycasting */
+            
+            var hits = []
+            if(shouldRaycast) { // check if mouse is pressed
+                // Perform a ray cast from the camera, in the direction of the mouse in 3d space
+                raycaster.setFromCamera(mouse, camera);
+    
+                // Extract intersected objects (from a particular scene or parent Object3D)
+                var intersections = raycaster.intersectObjects(group.children);
+
+                // Log all intersections
+                console.log(intersections)
+
+                // Map intersected meshes to the hits array
+                hits = intersections.map(intersection => intersection.object)
+            }
+
+
+			// variable which is increase by Math.PI every seconds - usefull for animation
+			var time = Date.now() * Math.PI;
+
+			// actually render the scene
+			renderer.render( scene, camera );
+
+			// Rotate view camera around scene
+			var x = camera.position.x;
+            var z = camera.position.z;
+
+			camera.position.x = x * Math.cos(0.01) + z * Math.sin(0.01);
+			camera.position.z = z * Math.cos(0.01) - x * Math.sin(0.01);
+
+			// re-Rotate the camerea to look at the cameraTarget at the center of the scene
+			camera.lookAt(cameraTarget);
+
+			// iterate over all objects in a scene
+			scene.traverse(function(object3d, i){
+				// Check if the current object is a THREE.Mesh (rather than a light, camera, etc.)
+				if( object3d instanceof THREE.Mesh === false )	return
+
+                // Rotate object based on `n` coefficient
+				object3d.rotateY(0.01 * object3d.n);
+				object3d.rotateX(0.02 * object3d.n);
+                object3d.rotateZ(0.03 * object3d.n);
+                
+                /* Try animating transitions here! */ 
+
+                // Check if current mesh is hit by the raycast
+                if(hits.includes(object3d))
+                    object3d.scale.set(1.2,1.2,1.2)
+                else 
+                    object3d.scale.set(1,1,1)
+            })
+        }
+        
+        window.addEventListener('mousemove', function (event) {
+            // calculate mouse position in normalized device coordinates
+            // (-1 to +1) for both components
+            mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        })
+
+        window.addEventListener('mousedown', function (event) {
+            shouldRaycast = true;
+        })
+
+        window.addEventListener('mouseup', function (event) {
+            shouldRaycast = false;
+        })
+
+
+	</script>
+</body>
+</html>

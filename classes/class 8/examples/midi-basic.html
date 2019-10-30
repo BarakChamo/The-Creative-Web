@@ -50,11 +50,13 @@
             });
 
             WebMidi.inputs[0].addListener("noteon", "all", function(e) {
-                note.innerHTML = `Name: ${e.note.name} Octave: ${e.note.octave}`
+                console.log('NOTE ON', e)
+                note.innerHTML = `Name: ${e.note.name} Octave: ${e.note.octave} Velocity: ${e.velocity.toFixed(2)}`
             });
 
             WebMidi.inputs[0].addListener("noteoff", "all", function(e) {
-                note.innerHTML = `Name: ${e.note.name} Octave: ${e.note.octave}`
+                console.log('NOTE OFF')
+                note.innerHTML = `Name: ${e.note.name} Octave: ${e.note.octave} Velocity: 0`
             });
         });
     </script>
