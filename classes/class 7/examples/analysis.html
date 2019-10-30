@@ -36,7 +36,7 @@
             });
 
         // create an FFT and Waveform analyzer
-        const fft = new Tone.FFT(32) // minimum fft bucket size is 16
+        const fft = new Tone.FFT(64) // minimum fft bucket size is 16
         const waveform = new Tone.Waveform(32) // minimum bucket size for waveform is 32
         const meter = new Tone.Meter()
 
@@ -45,11 +45,26 @@
         mic.connect(waveform)
         mic.connect(meter)
 
+        var lastLevel = 0.0
+
         // let's define a small animation loop that will get the analysis values
         function analyze() {
-            // console.log('Meter - ' + meter.getValue())
+            const freqDomain = fft.getValue()
+            const level = meter.getLevel()
+            // console.log('Meter - ' + level)
             // console.log('FFT - ' + fft.getValue())
-            console.log('Waveform - ' + waveform.getValue())
+
+            const normalizedLevel = 1 - meter.getLevel() / -70
+            // console.log("normalized Level " + normalizedLevel) 
+            // console.log("frequency position" +  freqDomain.indexOf(Math.max.apply(Math, freqDomain)) / 4)
+            
+            if(normalizedLevel > 0.85 && lastLevel < 0.85) {
+                console.log("SHUT UP!")
+            }
+
+            lastLevel = normalizedLevel
+
+            // console.log('Waveform - ' + waveform.getValue())
 
             // Call another run of the analyze update
             requestAnimationFrame(analyze)

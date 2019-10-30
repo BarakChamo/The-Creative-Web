@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="webmidi.js"></script>
+    <title>Basic Mobile Sensors example</title>
+    <style>
+        body {
+            background-color: lightskyblue;
+            color: darkslategray;
+            display: flex;
+            height: 100vh;
+            margin:0;
+            padding: 0;
+            overflow: hidden;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sensors {
+            align-self: center;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="sensors">
+        <h1>WebMIDI Messages</h1>
+        <h2>Control change</h2>
+        <span class="cc">--</span>
+        <br/>
+        <br/>
+        <h2>Notes</h2>
+        <span class="note">--</span>
+    </div>
+    <script>
+        const cc = document.getElementsByClassName('cc')[0]
+        const note = document.getElementsByClassName('note')[0]
+
+        WebMidi.enable(function(err) {
+            if (err) console.log("An error occurred", err);
+            
+            console.log(WebMidi.inputs)
+            
+            WebMidi.inputs[0].addListener("controlchange", "all", function(e) {
+                cc.innerHTML = `Controller: ${e.controller.number} Value: ${e.value}`
+            });
+
+            WebMidi.inputs[0].addListener("noteon", "all", function(e) {
+                note.innerHTML = `Name: ${e.note.name} Octave: ${e.note.octave}`
+            });
+
+            WebMidi.inputs[0].addListener("noteoff", "all", function(e) {
+                note.innerHTML = `Name: ${e.note.name} Octave: ${e.note.octave}`
+            });
+        });
+    </script>
+</body>
+</html>

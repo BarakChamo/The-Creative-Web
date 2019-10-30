@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+    <script src="https://unpkg.com/tone"></script>
+    <script src="https://unpkg.com/@tonejs/ui"></script>
+    <script src="webmidi.js"></script>
+
+    <title>Basic Mobile Sensors example</title>
+    <style>
+        body {
+            background-color: lightskyblue;
+            color: darkslategray;
+            display: flex;
+            height: 100vh;
+            margin:0;
+            padding: 0;
+            overflow: hidden;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sensors {
+            align-self: center;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <tone-demo autoplay>
+    </tone-demo>
+    
+    <span style="font-weight: bold; position: absolute; bottom: 100px; left: calc(50% - 1em); font-size: 2em;">
+        <span class="cc">CC</span>
+        <br/>
+        <br/>
+        <span class="note">NOTE</span>
+    </span>
+
+ 
+    <script>
+        const cc = document.getElementsByClassName('cc')[0]
+        const note = document.getElementsByClassName('note')[0]
+
+        
+        /* Tone.js Setup */
+        const synth = new Tone.Synth()
+        const filter = new Tone.AutoFilter().start()
+
+        synth.chain(filter, Tone.Master)
+
+        /* Setup WebMIDI */
+        WebMidi.enable(function(err) {
+            if (err) console.log("An error occurred", err);
+            
+            console.log(WebMidi.inputs)
+            synth.triggerAttackRelease('C4', 0.5, 0)
+            WebMidi.inputs[0].addListener("controlchange", "all", function(e) {
+                cc.innerHTML = `Controller: ${e.controller.number} Value: ${e.value}`
+
+                if(e.controller.number === 0) {
+                    console.log(e.value / 127)
+                    filter.depth = (e.value / 127)
+                }
+            });
+
+            WebMidi.inputs[0].addListener("noteon", "all", function(e) {
+                note.innerHTML = `NOTE ON - Name: ${e.note.name} Octave: ${e.note.octave}`
+                synth.triggerAttack(e.note.name + e.note.octave)
+            });
+
+            WebMidi.inputs[0].addListener("noteoff", "all", function(e) {
+                note.innerHTML = `NOTE OFF - Name: ${e.note.name} Octave: ${e.note.octave}`
+                synth.triggerRelease()
+            });
+        });
+    </script>
+</body>
+</html>
