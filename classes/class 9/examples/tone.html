@@ -25,7 +25,48 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.0.4/peerjs.min.js"></script>
-  <script src="/voice-call.js"></script>
-  <script src="./basic.js"></script>
+  <script src="./call-peer.js"></script>
+  <script>    
+    // initialize Peer.js real-time connection
+    initPeer(
+      // called on initial connection (on Peer.js initialization)
+      function onConnection(myPeerId) {
+        console.log("MY ID", myPeerId)
+      },
+
+      // called on incoming data messages (every message)
+      function onData(message, peerId) {
+        console.log("ON DATA", message, peerId)
+      },
+
+      // called on incoming media stream connections (on connection)
+      // for local media stream, peerId is `undefined`
+      function onMediaStream(stream, peerId) {
+        // stream is an instance of the MediaStream class
+        // it contains both audio and video streaming tracks
+        // Here's the documentation: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
+        
+        if(peerId) {
+          console.log("ON REMOTE STREAM", peerId, stream)
+        } else {
+          console.log("ON LOCAL STREAM", stream)
+        }
+      }, {
+        // id: 'YOUR_UNIQUE_ID',
+        video: false,
+        audio: true
+      }
+    )
+
+    // Call a peer
+    // callPeer(peerId: string)
+
+    // send message to all connected peers
+    // sendMessage(message: string)
+
+
+    // send message to one peer
+    // sendMessage(message: string, peerId: string)
+  </script>
 </body>
 </html>

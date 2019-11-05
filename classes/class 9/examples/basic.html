@@ -25,7 +25,83 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.0.4/peerjs.min.js"></script>
-  <script src="/voice-call.js"></script>
-  <script src="./basic.js"></script>
+  <script src="./call-peer.js"></script>
+  <script>
+    // Create an <audio> element to play the audio stream
+    // Create an <video> element to play the video stream
+    function playStream(stream) {
+      // Handle incoming audio
+      if(stream.getAudioTracks().length) {
+        console.log("Initialize audio track...")
+        var audio = document.createElement('audio')
+        audio.autoplay = true
+        
+        document.body.appendChild(audio)
+        audio.srcObject = stream
+      } 
+
+      // Handle incoming video
+      if(stream.getVideoTracks().length) {
+        console.log("Initialize video track...")
+        var video = document.createElement('video')
+        video.autoplay = true
+        
+        document.getElementById('videos').appendChild(video)
+        video.srcObject = stream
+      } 
+    }
+
+    // initialize Peer.js real-time connection
+    // initPeer(
+      // connectionCallback: fn(id: string),
+      // dataCallback: fn(message: any, peerId: string),
+      // mediaCallback: fn(stream: MediaStream, peerId: string),
+      // settings: {id: string, audio: bool, video: bool }
+    // )
+
+    // initialize Peer.js real-time connection
+    initPeer(
+      // called on initial connection (on Peer.js initialization)
+      function onConnection(myPeerId) {
+        console.log("MY ID", myPeerId)
+      },
+
+      // called on incoming data messages (every message)
+      function onData(message, peerId) {
+        console.log("ON DATA", message, peerId)
+      },
+
+      // called on incoming media stream connections (on connection)
+      // for local media stream, peerId is `undefined`
+      function onMediaStream(stream, peerId) {
+        // stream is an instance of the MediaStream class
+        // it contains both audio and video streaming tracks
+        // Here's the documentation: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
+        
+        if(peerId) {
+          console.log("ON REMOTE STREAM", peerId, stream)
+        } else {
+          console.log("ON LOCAL STREAM", stream)
+        }
+
+        // Play the stream
+        playStream(stream)
+      }, {
+        // id: 'YOUR_UNIQUE_ID',
+        video: true,
+        audio: true
+      }
+    )
+
+    // Call a peer
+    // callPeer(peerId: string)
+
+    // send message to all connected peers
+    // sendMessage(message: string)
+
+
+    // send message to one peer
+    // sendMessage(message: string, peerId: string)
+  </script>
 </body>
 </html>

@@ -8,27 +8,37 @@ var me = {}
 var myStream
 var peers = {}
 
-// initialize call
-initPeer()
-
+var peerCallback, peerDataCallback, peerMediaCallback
 
 // Start everything up
-function initPeer() {
+function initPeer(callback, dataCallback, mediaCallback, settings) {
+  settings = settings || { video: true, audio: true }
+
+  // assign global callbacks
+  peerCallback = callback
+  peerDataCallback = dataCallback
+  peerMediaCallback = mediaCallback
+
   if (!navigator.getUserMedia) return unsupported()
 
-  getLocalStream(function(err, stream) {
+  getLocalStream(settings, function(err, stream) {
     if (err || !stream) return;
 
-    connectToPeerJS()
+    if(mediaCallback) mediaCallback(stream)
+    connectToPeerJS(settings.id)
   })
 }
 
 // Connect to PeerJS and get an ID
-function connectToPeerJS(callback) {
+function connectToPeerJS(id) {
   display('Connecting to PeerJS...')
 
   // create new Peer.js connection
-  me = new Peer()
+  if(id)
+    me = new Peer(id)
+  else
+    me = new Peer()
+
 
   // handle incoming call
   me.on('call', handleIncomingCall)
@@ -53,12 +63,13 @@ function connectToPeerJS(callback) {
     peer.dataChannel = connection
 
     connection.on('data', function(data) {
+      if(peerDataCallback) peerDataCallback(data, connection.peer)
       display('Message from ' + connection.id + ': ' + data + '.')
     })
   });
 }
 
-function callPeer(peerId, shouldCall, shouldConnect, streamCallback, dataCallback) {
+function callPeer(peerId, shouldCall, shouldConnect) {
   display('Calling ' + peerId + '...')
   
   // create new peer connection
@@ -78,9 +89,10 @@ function callPeer(peerId, shouldCall, shouldConnect, streamCallback, dataCallbac
   peer.outgoing.on('stream', function(stream) {
     display('Connected to ' + peerId + '.')
     
+    if(peer.stream) return
+    peer.stream = stream
     // call back with stream
-    if(streamCallback) streamCallback(stream)
-    else addIncomingStream(peer, stream)
+    if(peerMediaCallback) peerMediaCallback(stream, peerId)
   })
   
   
@@ -92,15 +104,21 @@ function callPeer(peerId, shouldCall, shouldConnect, streamCallback, dataCallbac
   peer.dataChannel.on('open', function(){
   //   // listen for incoming data messages
     peer.dataChannel.on('data', function(message) {
+      if(peerDataCallback) peerDataCallback(message, peerId)
+
       display('Message from ' + peerId + ': ' + message + '.')
-      if(dataCallback) streamCallback(data)
     })
   })
 }
 
-function sendMessage(message) {
-  // send message to all peers
-  Object.values(peers).forEach(peer => peer.dataChannel.send(message))
+function sendMessage(message, peerId) {
+  if(peerId) {
+    // send message to specified peer
+    peers[peerId] && peers[peerId].dataChannel && peers[peerId].dataChannel.send(message)
+  } else {
+    // send message to all peers
+    Object.values(peers).forEach(peer => peer.dataChannel.send(message))
+  }
 }
 
 // When someone initiates a call via PeerJS
@@ -113,47 +131,18 @@ function handleIncomingCall(incoming) {
   incoming.answer(myStream)
 
   peer.incoming.on('stream', function(stream) {
-    addIncomingStream(peer, stream)
+    if(peer.stream) return
+    peer.stream = stream
+
+    if(peerMediaCallback) peerMediaCallback(stream, incoming.peer)
   })
 }
 
-// Add the new audio stream. Either from an incoming call, or
-// from the response to one of our outgoing calls
-function addIncomingStream(peer, stream) {
-  display('Adding incoming stream from ' + peer.id)
-  peer.incomingStream = stream;
-  playStream(stream)
-
-}
-
-// Create an <audio> element to play the audio stream
-// Create an <video> element to play the video stream
-function playStream(stream) {
-  // Handle incoming audio
-  if(stream.getAudioTracks().length) {
-    var audio = document.createElement('audio')
-    audio.autoplay = true
-    
-    document.body.appendChild(audio)
-    audio.srcObject = stream
-  } 
-
-  // Handle incoming video
-  if(stream.getVideoTracks().length) {
-    var video = document.createElement('video')
-    video.autoplay = true
-    
-    document.getElementById('videos').appendChild(video)
-    video.srcObject = stream
-  } 
-
-}
-
 // Get access to the microphone
-function getLocalStream(callback) {
+function getLocalStream(settings, callback) {
   display('Trying to access your microphone. Please click "Allow".')
   navigator.getUserMedia (
-    {video: true, audio: true},
+    {video: settings.video, audio: settings.audio},
 
     function success(audioStream) {
       display('Microphone is open.')
