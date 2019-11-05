@@ -11,3 +11,6 @@ https://developer.mozilla.org/en-US/docs/Web/API/CanvasCaptureMediaStreamTrack
 https://muaz-khan.blogspot.com/2017/04/webrtc-capturestream-api.html
 https://developers.google.com/web/updates/2016/10/capture-stream
 https://webrtc.github.io/samples/src/content/capture/canvas-record/
+
+#### Media APIs in the browser
+https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamAudioSourceNode
