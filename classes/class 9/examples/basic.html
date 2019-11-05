@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebRTC/PeerJS Audio Call</title>
+  <style>
+    video {
+      width: 300px;
+      object-fit: contain;
+    }
+  </style>  
+</head>
+<body>
+  <div class="wrapper">
+    <input type="text" placeholder="Peer ID" id="id">
+    <button id="call" onclick="callPeer(document.getElementById('id').value)">Call Peer</button>
+    <br/>
+    <br/>
+    
+    <input type="text" placeholder="Send message" id="message">
+    <button id="message" onclick="sendMessage(document.getElementById('message').value)">Send Message</button>
+    
+    <div id="videos"></div>
+
+    <div id="display"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.0.4/peerjs.min.js"></script>
+  <script src="/voice-call.js"></script>
+  <script src="./basic.js"></script>
+</body>
+</html>
