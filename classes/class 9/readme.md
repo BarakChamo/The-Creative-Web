@@ -14,6 +14,7 @@ Without getting into details, this means that our server requires a `certificate
 identify it to the connecting browser, and be used to establish an `HTTPS` connection.
 
 To generate a new set of certificates, run the following in your development folder:
+
 `openssl req  -nodes -new -x509  -keyout key.pem -out cert.pem`
 
 This will create two files: `key.pem` and `cert.pem`.
