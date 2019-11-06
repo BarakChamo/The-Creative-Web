@@ -52,7 +52,7 @@
     /* Tone.js initialization */
 
     // create a gain node
-    const gain = new Tone.Gain()
+    const merge = new Tone.Merge()
 
     // create analysis nodes
     const fft = new Tone.FFT(32) // minimum fft bucket size is 16
@@ -60,12 +60,12 @@
     const meter = new Tone.Meter()
 
     // connect gain to analyzers and output
-    gain.fan(fft, waveform, meter, Tone.Master)
+    merge.fan(fft, waveform, meter, Tone.Master)
 
-    // bind Tone interface elements to the gain node
-		document.querySelector("tone-oscilloscope").bind(gain)
-    document.querySelector("tone-meter").bind(gain)
-    document.querySelector("tone-fft").bind(gain)  
+    // bind Tone interface elements to the merge node
+		document.querySelector("tone-oscilloscope").bind(merge)
+    document.querySelector("tone-meter").bind(merge)
+    document.querySelector("tone-fft").bind(merge)  
 
     function connect(id) {
     // initialize Peer.js real-time connection
@@ -87,22 +87,19 @@
         // it contains both audio and video streaming tracks
         // Here's the documentation: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
         
-        let inputIndex = 0
         if(peerId) {
-          inputIndex = 1
           console.log("ON REMOTE STREAM", peerId, stream)
         } else {
-          inputIndex = 0
           console.log("ON LOCAL STREAM", stream)
         }
 
         /* Connect stream to audio analysis */
 
-          // Create audio node from media stream
-          const source = Tone.context.createMediaStreamSource(stream)
+        // Create audio node from media stream
+        const source = Tone.context.createMediaStreamSource(stream)
 
-          // Connect the source to the gain placeholder we created
-          Tone.connect(source, gain)
+        // Connect the source to the gain placeholder we created
+        Tone.connect(source, peerId ? merge.left : merge.right)
 
       }, {
         id: id,
