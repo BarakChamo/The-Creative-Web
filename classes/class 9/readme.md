@@ -1,9 +1,24 @@
 ## Class 9 - Real-time communication
 
 
-#### An aside: Generating self-signed certificates for `HTTPS` development
+### HTTPS in local environments
+As we've seen before in this class, many browser APIs require secure network
+connections in order to let Javascript code access things like the microphone or sensors.
+In order to develop such app in our local environments, we need to run a secure local server.
+
+Without getting into details, this means that our server requires a `certificate` that will
+identify it to the connecting browser, and be used to establish an `HTTPS` connection.
+
+To generate a new set of certificates, run the following in your development folder:
 `openssl req  -nodes -new -x509  -keyout key.pem -out cert.pem`
-`http-server --ssl`
+
+This will create two files: `key.pem` and `cert.pem`.
+
+To run a secure server in your local development folder:
+1. make suer `http-server` is installed by running `npm install -g http-server`
+2. Run a secure server with the command `http-server --ssl`
+
+A note: the certificates must be in the same folder in which you're running the `http-server --ssl` command.
 
 ### Resources
 #### WebRTC and Peer.js
