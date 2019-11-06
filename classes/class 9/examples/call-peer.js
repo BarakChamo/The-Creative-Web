@@ -64,7 +64,7 @@ function connectToPeerJS(id) {
 
     connection.on('data', function(data) {
       if(peerDataCallback) peerDataCallback(data, connection.peer)
-      display('Message from ' + connection.id + ': ' + data + '.')
+      display('Message from ' + connection.peer + ': ' + data + '.')
     })
   });
 }
@@ -133,7 +133,6 @@ function handleIncomingCall(incoming) {
   peer.incoming.on('stream', function(stream) {
     if(peer.stream) return
     peer.stream = stream
-
     if(peerMediaCallback) peerMediaCallback(stream, incoming.peer)
   })
 }
