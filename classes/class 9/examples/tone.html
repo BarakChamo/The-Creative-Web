@@ -3,6 +3,13 @@
 <head>
   <title>WebRTC/PeerJS Audio Call</title>
   <style>
+    .wrapper {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      z-index: 1000;
+    }
+
     video {
       width: 300px;
       object-fit: contain;
@@ -11,6 +18,11 @@
 </head>
 <body>
   <div class="wrapper">
+      <input type="text" placeholder="Youd ID" id="uid">
+      <button id="call" onclick="connect(document.getElementById('uid').value)">Init peer.js</button>
+      <br/>
+      <br/>
+  
     <input type="text" placeholder="Peer ID" id="id">
     <button id="call" onclick="callPeer(document.getElementById('id').value)">Call Peer</button>
     <br/>
@@ -18,15 +30,44 @@
     
     <input type="text" placeholder="Send message" id="message">
     <button id="message" onclick="sendMessage(document.getElementById('message').value)">Send Message</button>
-    
-    <div id="videos"></div>
 
     <div id="display"></div>
   </div>
 
+    <tone-demo autoplay>
+      <tone-oscilloscope style="width:400px; height:50px;margin-bottom: 50px;"></tone-oscilloscope>
+      <tone-meter style="width:400px; height:50px;margin-top: 50px;"></tone-meter>
+      <tone-fft style="width:400px; height:50px;margin-top: 50px;"></tone-fft>
+    </tone-demo>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.0.4/peerjs.min.js"></script>
   <script src="./call-peer.js"></script>
-  <script>    
+
+  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2/webcomponents-bundle.js"></script>
+  <script src="https://unpkg.com/tone"></script>
+  <script src="https://unpkg.com/@tonejs/ui"></script>
+  
+  <script>
+    /* Tone.js initialization */
+
+    // create a gain node
+    const gain = new Tone.Gain()
+
+    // create analysis nodes
+    const fft = new Tone.FFT(32) // minimum fft bucket size is 16
+    const waveform = new Tone.Waveform(32) // minimum bucket size for waveform is 32
+    const meter = new Tone.Meter()
+
+    // connect gain to analyzers and output
+    gain.fan(fft, waveform, meter, Tone.Master)
+
+    // bind Tone interface elements to the gain node
+		document.querySelector("tone-oscilloscope").bind(gain)
+    document.querySelector("tone-meter").bind(gain)
+    document.querySelector("tone-fft").bind(gain)  
+
+    function connect(id) {
     // initialize Peer.js real-time connection
     initPeer(
       // called on initial connection (on Peer.js initialization)
@@ -46,17 +87,30 @@
         // it contains both audio and video streaming tracks
         // Here's the documentation: https://developer.mozilla.org/en-US/docs/Web/API/MediaStream
         
+        let inputIndex = 0
         if(peerId) {
+          inputIndex = 1
           console.log("ON REMOTE STREAM", peerId, stream)
         } else {
+          inputIndex = 0
           console.log("ON LOCAL STREAM", stream)
         }
+
+        /* Connect stream to audio analysis */
+
+          // Create audio node from media stream
+          const source = Tone.context.createMediaStreamSource(stream)
+
+          // Connect the source to the gain placeholder we created
+          Tone.connect(source, gain)
+
       }, {
-        // id: 'YOUR_UNIQUE_ID',
+        id: id,
         video: false,
         audio: true
       }
     )
+    }
 
     // Call a peer
     // callPeer(peerId: string)
