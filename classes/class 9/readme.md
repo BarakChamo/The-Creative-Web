@@ -20,6 +20,32 @@ To run a secure server in your local development folder:
 
 A note: the certificates must be in the same folder in which you're running the `http-server --ssl` command.
 
+### Examples
+Several examples are provided, showing how to set up a basic Peer.js connection and how to integrate 
+WebRTC media streams with Three.js and Tone.js.
+
+Note  the `call-peer.js` file I provided in the examples folder, which will server as yet another
+level of abstraction to the rather convoluted process of establishing WebRTC connections with `Peer.js`.
+
+#### `basic.html`
+This example shows how to set up a media stream and data connection, allowing you to:
+1. Create a new WebRTC connection with a random ID.
+2. Connect to another peer.
+3. Share audio and video
+4. send messages with the data channel connection
+
+#### `tone.html`
+This example integrates real-time WebRTC media streams with Tone.js' audio analysis features.
+
+In this example you may choose your own unique ID and share audio with a rmeote partner, both 
+of your audio streams will be analyzed and visualized.
+
+#### `three.html`
+This example integrates real-time WebRTC media streams with Three.js' video textures.
+
+In this example you may choose your own unique ID and share video with a remote partnet.
+Each of your video streams will be displayed on a randomly placed rotating cube.
+
 ### Resources
 #### WebRTC and Peer.js
 https://webrtc.org/
