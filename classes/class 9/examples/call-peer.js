@@ -90,22 +90,24 @@ function callPeer(peerId) {
   /* Handle audio / video */ 
 
   // Create new media stream
-  peer.outgoing = me.call(peerId, myStream)
-  
-  // handle errors
-  peer.outgoing.on('error', function(err) {
-    display(err)
-  })
-  
-  // listen for incoming media streams
-  peer.outgoing.on('stream', function(stream) {
-    display('Connected to ' + peerId + '.')
+  if(myStream) {
+    peer.outgoing = me.call(peerId, myStream)
     
-    if(peer.stream) return
-    peer.stream = stream
-    // call back with stream
-    if(peerMediaCallback) peerMediaCallback(stream, peerId)
-  })
+    // handle errors
+    peer.outgoing.on('error', function(err) {
+      display(err)
+    })
+    
+    // listen for incoming media streams
+    peer.outgoing.on('stream', function(stream) {
+      display('Connected to ' + peerId + '.')
+      
+      if(peer.stream) return
+      peer.stream = stream
+      // call back with stream
+      if(peerMediaCallback) peerMediaCallback(stream, peerId)
+    })
+  }
   
   
   /* Handle Data channels */
@@ -115,7 +117,6 @@ function callPeer(peerId) {
   
   peer.dataChannel.on('open', function() {
     // share connected peers
-    console.log("ON OPEN")
     setTimeout(() => sharePeerGroup(peer))
 
     // listen for incoming data messages
