@@ -25,12 +25,15 @@ function initPeer(callback, dataCallback, mediaCallback, settings) {
 
   if (!navigator.getUserMedia) return unsupported()
 
-  getLocalStream(settings, function(err, stream) {
-    if (err || !stream) return;
+  if (settings.audio || settings.video)
+    getLocalStream(settings, function(err, stream) {
+      if (err || !stream) return;
 
-    if(mediaCallback) mediaCallback(stream)
+      if(mediaCallback) mediaCallback(stream)
+      connectToPeerJS(settings.id)
+    })
+  else
     connectToPeerJS(settings.id)
-  })
 }
 
 // Connect to PeerJS and get an ID
@@ -51,6 +54,8 @@ function connectToPeerJS(id) {
   me.on('open', function() {
     display('Connected.')
     display('ID: ' + me.id)
+
+    peerCallback && peerCallback(me.id)
   })
 
   // handle connection errors
