@@ -7,13 +7,17 @@ navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia
 var me = {}
 var myStream
 var peers = {}
+var peerGroup = true
 
 var peerCallback, peerDataCallback, peerMediaCallback
 
 // Start everything up
 function initPeer(callback, dataCallback, mediaCallback, settings) {
-  settings = settings || { video: true, audio: true }
-
+  settings = settings || { video: true, audio: true, group: true }
+  
+  // Mark if group or not
+  peerGroup = settings.group 
+  
   // assign global callbacks
   peerCallback = callback
   peerDataCallback = dataCallback
@@ -45,7 +49,6 @@ function connectToPeerJS(id) {
 
   // handle open connections
   me.on('open', function() {
-
     display('Connected.')
     display('ID: ' + me.id)
   })
@@ -62,14 +65,18 @@ function connectToPeerJS(id) {
     var peer = getPeer(connection.peer)
     peer.dataChannel = connection
 
+    // share connected peers
+    setTimeout(() => sharePeerGroup(peer))
+
     connection.on('data', function(data) {
+      if(peerGroup && data && data.peer_group) connectToGroup(data.peer_group)
       if(peerDataCallback) peerDataCallback(data, connection.peer)
       display('Message from ' + connection.peer + ': ' + data + '.')
     })
   });
 }
 
-function callPeer(peerId, shouldCall, shouldConnect) {
+function callPeer(peerId) {
   display('Calling ' + peerId + '...')
   
   // create new peer connection
@@ -101,14 +108,33 @@ function callPeer(peerId, shouldCall, shouldConnect) {
   // // create new data stream
   peer.dataChannel = me.connect(peerId)
   
-  peer.dataChannel.on('open', function(){
-  //   // listen for incoming data messages
+  peer.dataChannel.on('open', function() {
+    // share connected peers
+    console.log("ON OPEN")
+    setTimeout(() => sharePeerGroup(peer))
+
+    // listen for incoming data messages
     peer.dataChannel.on('data', function(message) {
+      if(peerGroup && message && message.peer_group) connectToGroup(message.peer_group)
       if(peerDataCallback) peerDataCallback(message, peerId)
 
       display('Message from ' + peerId + ': ' + message + '.')
     })
   })
+}
+
+function sharePeerGroup(peer) {
+  const group = Object.keys(peers).filter(peer => peer != me.id)
+
+  if(group.length)
+    sendMessage({peer_group: group})
+}
+
+function connectToGroup(group) {
+  const newGroup = group.filter(peerId => (!(peerId in peers) && (peerId != me.id)))
+
+  if(newGroup.length)
+    newGroup.forEach(peerId => callPeer(peerId))
 }
 
 function sendMessage(message, peerId) {
