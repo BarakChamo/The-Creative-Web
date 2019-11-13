@@ -25,6 +25,12 @@ To run a secure server in your local development folder:
 
 A note: the certificates must be in the same folder in which you're running the `http-server --ssl` command.
 
+If you want to bypass security warnings on Google Chrome, navigate to this flags page:
+`chrome://flags/#allow-insecure-localhost`
+
+And toggle `Enable` on `Allow invalid certificates for resources loaded from localhost`
+and click `Relaunch` at the bottom of the page.
+
 ### Examples
 Several examples are provided, showing how to set up a basic Peer.js connection and how to integrate 
 WebRTC media streams with Three.js and Tone.js.
