@@ -47,3 +47,4 @@ Here are some projects that combine machine learning using `tensorflow.js` or `m
 - [ML Pong](https://am7673.itp.io:3000/)
 - [SketchRNN](https://storage.googleapis.com/quickdraw-models/sketchRNN/demo_tfjs/interactive_predict.html)
 - [Emoji Caption](https://emoji-caption.glitch.me/)
+- [Huia Experience](https://experience.huia.haus/)
